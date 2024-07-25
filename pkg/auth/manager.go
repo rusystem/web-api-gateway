@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"math/rand"
-	"pingocean-front/users-service/pkg/domain"
 	"time"
 )
 
