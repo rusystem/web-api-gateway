@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/rusystem/web-api-gateway/proto/crm_warehouse/supplier"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -34,22 +35,22 @@ func (s *SuppliersClient) Close() error {
 	return s.conn.Close()
 }
 
-func (s *SuppliersClient) GetById(ctx context.Context, id int64) (Supplier, error) {
+func (s *SuppliersClient) GetById(ctx context.Context, id int64) (domain.Supplier, error) {
 	if id <= 0 {
-		return Supplier{}, errors.New("calls grpc: id can`t be zero")
+		return domain.Supplier{}, errors.New("calls grpc: id can`t be zero")
 	}
 
 	resp, err := s.supplierClient.GetById(ctx, &supplier.Id{Id: id})
 	if err != nil {
-		return Supplier{}, err
+		return domain.Supplier{}, err
 	}
 
 	var otherFields map[string]interface{}
 	if err = json.Unmarshal([]byte(resp.OtherFields), &otherFields); err != nil {
-		return Supplier{}, err
+		return domain.Supplier{}, err
 	}
 
-	return Supplier{
+	return domain.Supplier{
 		ID:                resp.Id,
 		Name:              resp.Name,
 		LegalAddress:      resp.LegalAddress,
@@ -77,7 +78,7 @@ func (s *SuppliersClient) GetById(ctx context.Context, id int64) (Supplier, erro
 	}, nil
 }
 
-func (s *SuppliersClient) Create(ctx context.Context, spl Supplier) (int64, error) {
+func (s *SuppliersClient) Create(ctx context.Context, spl domain.Supplier) (int64, error) {
 	otherFieldsJSON, err := json.Marshal(spl.OtherFields)
 	if err != nil {
 		return 0, err

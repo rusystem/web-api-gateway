@@ -4,22 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/rusystem/crm-warehouse/pkg/gen/proto/warehouse"
+	"github.com/rusystem/web-api-gateway/pkg/domain"
+	"github.com/rusystem/web-api-gateway/proto/crm_warehouse/warehouse"
 	"google.golang.org/grpc"
 )
-
-type Warehouse struct {
-	ID                int64                  `gorm:"primaryKey" json:"id"` // Уникальный идентификатор склада
-	Name              string                 `json:"name"`                 // Название склада
-	Address           string                 `json:"address"`              // Адрес склада
-	ResponsiblePerson string                 `json:"responsible_person"`   // Ответственное лицо за склад
-	Phone             string                 `json:"phone"`                // Контактный телефон склада
-	Email             string                 `json:"email"`                // Электронная почта для связи
-	MaxCapacity       int64                  `json:"max_capacity"`         // Максимальная вместимость склада
-	CurrentOccupancy  int64                  `json:"current_occupancy"`    // Текущая заполняемость склада
-	OtherFields       map[string]interface{} `json:"other_fields"`         // Дополнительные пользовательские поля
-	Country           string                 `json:"country"`              // Страна склада
-}
 
 type WarehouseClient struct {
 	conn            *grpc.ClientConn
@@ -46,22 +34,22 @@ func (w *WarehouseClient) Close() error {
 	return w.conn.Close()
 }
 
-func (w *WarehouseClient) GetById(ctx context.Context, id int64) (Warehouse, error) {
+func (w *WarehouseClient) GetById(ctx context.Context, id int64) (domain.Warehouse, error) {
 	if id <= 0 {
-		return Warehouse{}, errors.New("calls grpc: id can`t be zero")
+		return domain.Warehouse{}, errors.New("calls grpc: id can`t be zero")
 	}
 
 	resp, err := w.warehouseClient.GetById(ctx, &warehouse.Id{Id: id})
 	if err != nil {
-		return Warehouse{}, err
+		return domain.Warehouse{}, err
 	}
 
 	var otherFields map[string]interface{}
 	if err = json.Unmarshal([]byte(resp.OtherFields), &otherFields); err != nil {
-		return Warehouse{}, err
+		return domain.Warehouse{}, err
 	}
 
-	return Warehouse{
+	return domain.Warehouse{
 		ID:                resp.Id,
 		Name:              resp.Name,
 		Address:           resp.Address,
@@ -75,7 +63,7 @@ func (w *WarehouseClient) GetById(ctx context.Context, id int64) (Warehouse, err
 	}, nil
 }
 
-func (w *WarehouseClient) Create(ctx context.Context, wh Warehouse) (int64, error) {
+func (w *WarehouseClient) Create(ctx context.Context, wh domain.Warehouse) (int64, error) {
 	otherFieldsJSON, err := json.Marshal(wh.OtherFields)
 	if err != nil {
 		return 0, err
