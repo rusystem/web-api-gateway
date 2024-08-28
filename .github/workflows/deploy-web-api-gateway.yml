@@ -16,6 +16,11 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
+      - name: Check directory structure
+        run: |
+          pwd
+          ls -la
+
       - name: Copy files to the server
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
