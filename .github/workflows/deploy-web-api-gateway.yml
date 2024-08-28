@@ -26,6 +26,6 @@ jobs:
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@91.243.71.100 << 'EOF'
           cd /home/pomogator
-          docker-compose down web-api-gateway
-          docker-compose up -d web-api-gateway
+          docker compose down web-api-gateway
+          docker compose up -d web-api-gateway
           EOF
