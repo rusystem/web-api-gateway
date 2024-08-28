@@ -20,9 +20,9 @@ jobs:
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
           -e "ssh -o StrictHostKeyChecking=no" \
-          ./home/runner/work/web-api-gateway/web-api-gateway/ ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/web-api-gateway
+          /home/runner/work/web-api-gateway/web-api-gateway/ ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/web-api-gateway
           -e "ssh -o StrictHostKeyChecking=no" \
-          ./home/runner/work/web-api-gateway/web-api-gateway/docker-compose.yml ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/
+          /home/runner/work/web-api-gateway/web-api-gateway/docker-compose.yml ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/
 
       - name: Deploy Web-API-Gateway
         run: |
