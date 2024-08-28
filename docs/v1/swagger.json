@@ -9,7 +9,7 @@
         },
         "version": "1.0"
     },
-    "host": "91.243.71.100:8080",
+    "host": "localhost:8080",
     "basePath": "/api/web-api-gateway/v1",
     "paths": {
         "/auth": {

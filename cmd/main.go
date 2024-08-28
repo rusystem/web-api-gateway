@@ -33,7 +33,7 @@ func init() {
 // @contact.name ru.system.ru@gmail.com
 // @contact.email ru.system.ru@gmail.com
 
-// @host 91.243.71.100:8080
+// @host localhost:8080
 // @BasePath /api/web-api-gateway/v1
 
 // @securityDefinitions.apikey ApiKeyAuth
