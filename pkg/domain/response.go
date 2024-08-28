@@ -43,8 +43,8 @@ type MessageResponse struct {
 }
 
 type SignUpResponse struct {
-	ID      string `json:"id"`
-	IsAdmin bool   `json:"is_admin"`
+	ID      int64 `json:"id"`
+	IsAdmin bool  `json:"is_admin"`
 }
 
 type CreateUserResponse struct {

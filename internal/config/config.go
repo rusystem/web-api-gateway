@@ -44,7 +44,6 @@ type Memcache struct {
 }
 
 type Url struct {
-	Supplier  string
 	Warehouse string
 }
 
@@ -86,6 +85,14 @@ func New(isProd bool) (*Config, error) {
 	}
 
 	if err := envconfig.Process("memcache", &cfg.Memcache); err != nil {
+		return nil, err
+	}
+
+	if err := envconfig.Process("url", &cfg.Url); err != nil {
+		return nil, err
+	}
+
+	if err := envconfig.Process("auth", &cfg.Auth); err != nil {
 		return nil, err
 	}
 

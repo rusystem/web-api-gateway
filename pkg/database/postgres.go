@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"github.com/rusystem/web-api-gateway/pkg/logger"
 	"github.com/tinrab/retry"
 	"time"

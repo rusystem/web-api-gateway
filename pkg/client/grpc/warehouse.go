@@ -7,6 +7,8 @@ import (
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/rusystem/web-api-gateway/proto/crm_warehouse/warehouse"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type WarehouseClient struct {
@@ -41,6 +43,11 @@ func (w *WarehouseClient) GetById(ctx context.Context, id int64) (domain.Warehou
 
 	resp, err := w.warehouseClient.GetById(ctx, &warehouse.Id{Id: id})
 	if err != nil {
+		st, ok := status.FromError(err)
+		if ok && st.Code() == codes.NotFound {
+			return domain.Warehouse{}, domain.ErrWarehouseNotFound
+		}
+
 		return domain.Warehouse{}, err
 	}
 

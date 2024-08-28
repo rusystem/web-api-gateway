@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
+	tools "github.com/rusystem/web-api-gateway/tool"
 	"net/http"
 )
 
@@ -31,7 +32,7 @@ func (h *Handler) initAuthRoutes(api *gin.RouterGroup) {
 // @ID sign-in
 // @Accept json
 // @Produce json
-// @Param input body auth.SignIn true "Необходимо указать данные для аутентификации пользователя."
+// @Param input body domain.SignIn true "Необходимо указать данные для аутентификации пользователя."
 // @Success 200 {object} domain.TokenResponse
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
@@ -46,21 +47,13 @@ func (h *Handler) signIn(c *gin.Context) {
 
 	res, err := h.services.Auth.SignIn(c, inp)
 	if err != nil {
-		if errors.Is(err, domain.ErrCompanyNotFound) {
-			newResponse(c, http.StatusNotFound, err.Error())
-			return
-		}
-
-		if errors.Is(err, domain.ErrCompanyNotApproved) ||
-			errors.Is(err, domain.ErrCompanyBlocked) ||
-			errors.Is(err, domain.ErrUserBlocked) ||
-			errors.Is(err, domain.ErrUserNotApproved) {
+		if errors.Is(err, domain.ErrUserIsNotActive) || errors.Is(err, domain.ErrUserIsNotApproved) {
 			newResponse(c, http.StatusForbidden, err.Error())
 			return
 		}
 
 		if errors.Is(err, domain.ErrLoginCredentials) {
-			newResponse(c, http.StatusBadRequest, err.Error())
+			newResponse(c, http.StatusUnauthorized, err.Error())
 			return
 		}
 
@@ -82,7 +75,7 @@ func (h *Handler) signIn(c *gin.Context) {
 // @ID refresh-tokens
 // @Accept json
 // @Produce json
-// @Param input body auth.TokensRequest true "Необходимо указать текущие refresh token и sections."
+// @Param input body domain.TokensRequest true "Необходимо указать текущие refresh token и sections."
 // @Success 200 {object} domain.TokenResponse
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
@@ -110,31 +103,51 @@ func (h *Handler) refresh(c *gin.Context) {
 		AccessToken:  res.AccessToken,
 		RefreshToken: res.RefreshToken,
 		ExpiresIn:    res.ExpiresIn,
-		Sections:     inp.Sections,
+		Sections:     res.Sections,
 	})
 }
 
 // @Summary Sign up
+// @Security ApiKeyAuth
 // @Tags auth
 // @Description Регистрация нового пользователя
 // @ID sign-up
 // @Accept json
 // @Produce json
-// @Param input body auth.SignUp true "Необходимо указать данные для регистрации нового пользователя."
+// @Param input body domain.SignUp true "Необходимо указать данные для регистрации нового пользователя."
 // @Success 200 {object} domain.SignUpResponse
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
 // @Failure default {object} domain.ErrorResponse
 // @Router /register [POST]
 func (h *Handler) signUp(c *gin.Context) {
+	//только у супер пользователя есть возможность добавлять пользователя в другие компании
+	//только у супер пользователя есть возможность давать admin роль пользователю
+
 	var inp domain.SignUp
 	if err := c.BindJSON(&inp); err != nil {
 		newResponse(c, http.StatusBadRequest, domain.ErrInvalidInputBody.Error())
 		return
 	}
 
-	userId, isAdmin, err := h.services.Auth.SignUp(c, inp)
+	if !tools.IsAllowedRole(inp.Role) {
+		newResponse(c, http.StatusBadRequest, domain.ErrRoleNotAllowed.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
 	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	userId, isAdmin, err := h.services.Auth.SignUp(c, inp, info)
+	if err != nil {
+		if errors.Is(err, domain.ErrUserIsNotActive) || errors.Is(err, domain.ErrUserIsNotApproved) {
+			newResponse(c, http.StatusForbidden, err.Error())
+			return
+		}
+
 		if errors.Is(err, domain.ErrUserAlreadyExists) {
 			newResponse(c, http.StatusConflict, err.Error())
 			return
@@ -169,13 +182,7 @@ func (h *Handler) signOut(c *gin.Context) {
 		return
 	}
 
-	u, err := h.services.Auth.GetAuthUser(c, userInfo.UserId, userInfo.CompanyId)
-	if err != nil {
-		newResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	if err = h.services.Auth.SignOut(c, u); err != nil {
+	if err = h.services.Auth.SignOut(c, userInfo.UserId, userInfo.CompanyId); err != nil {
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

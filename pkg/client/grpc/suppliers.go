@@ -7,6 +7,8 @@ import (
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/rusystem/web-api-gateway/proto/crm_warehouse/supplier"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -42,6 +44,11 @@ func (s *SuppliersClient) GetById(ctx context.Context, id int64) (domain.Supplie
 
 	resp, err := s.supplierClient.GetById(ctx, &supplier.Id{Id: id})
 	if err != nil {
+		st, ok := status.FromError(err)
+		if ok && st.Code() == codes.NotFound {
+			return domain.Supplier{}, domain.ErrSupplierNotFound
+		}
+
 		return domain.Supplier{}, err
 	}
 

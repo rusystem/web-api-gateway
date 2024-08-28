@@ -1,5 +1,5 @@
 http:
-  port: 3000
+  port: 8080
 
 limiter:
   rps: 10

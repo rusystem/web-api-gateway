@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"context"
@@ -26,14 +26,14 @@ func init() {
 	logger.ZapLoggerInit()
 }
 
-// @title Wen api gateway API
+// @title Web api gateway API
 // @version 1.0
 // @description API gateway
 
 // @contact.name ru.system.ru@gmail.com
 // @contact.email ru.system.ru@gmail.com
 
-// @host localhost:3000
+// @host web-api.pomogator.kz
 // @BasePath /api/web-api-gateway/v1
 
 // @securityDefinitions.apikey ApiKeyAuth
@@ -41,7 +41,7 @@ func init() {
 // @name Authorization
 func main() {
 	// init configs
-	cfg, err := config.New(true)
+	cfg, err := config.New(false)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("failed to initialize config, err: %v", err))
 	}
@@ -74,7 +74,7 @@ func main() {
 	}(pc)
 
 	// init grpc supplier client
-	splClient, err := grpc.NewSuppliersClient(cfg.Url.Supplier)
+	splClient, err := grpc.NewSuppliersClient(cfg.Url.Warehouse)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("can`t connect to chat grpc service, err - %v\n", err))
 	}

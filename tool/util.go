@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/segmentio/ksuid"
 	"strings"
 	"time"
@@ -112,4 +113,29 @@ func DecodeBase64(input string) (string, error) {
 
 func EncodeBase64(input string) string {
 	return base64.StdEncoding.EncodeToString([]byte(input))
+}
+
+// IsFullAccessSection returns true if section is full access
+func IsFullAccessSection(sections []string) bool {
+	for _, section := range sections {
+		if section == domain.FullAllAccessSection {
+			return true
+		}
+	}
+
+	return false
+}
+
+func IsAllowedRole(role string) bool {
+	if role == "" {
+		return true
+	}
+
+	for _, r := range domain.AllowedRoles {
+		if r == role {
+			return true
+		}
+	}
+
+	return false
 }

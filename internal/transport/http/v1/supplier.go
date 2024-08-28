@@ -1,23 +1,22 @@
 package v1
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"net/http"
 )
 
 func (h *Handler) initSupplierRoutes(api *gin.RouterGroup) {
-	//supplier := api.Group("/supplier", h.userIdentity) //todo вернуть после тестирования аутентификации
-	spl := api.Group("/supplier")
+	spl := api.Group("/supplier", h.adminIdentity)
 	{
 		spl.GET("/:id", h.getSupplier)
 		spl.POST("/", h.createSupplier)
 	}
 }
 
-// todo добавить второй строкой @Security ApiKeyAuth
-
 // @Summary Get supplier by id
+// @Security ApiKeyAuth
 // @Tags supplier
 // @Description Получение поставщика по id
 // @ID get-supplier
@@ -38,6 +37,11 @@ func (h *Handler) getSupplier(c *gin.Context) {
 
 	spl, err := h.services.Supplier.GetById(c, int64(id))
 	if err != nil {
+		if errors.Is(err, domain.ErrSupplierNotFound) {
+			newResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -45,15 +49,14 @@ func (h *Handler) getSupplier(c *gin.Context) {
 	c.JSON(http.StatusOK, spl)
 }
 
-// todo добавить второй строкой @Security ApiKeyAuth
-
 // @Summary Create supplier
+// @Security ApiKeyAuth
 // @Tags supplier
 // @Description Создание поставщика
 // @ID create-supplier
 // @Accept json
 // @Produce json
-// @Param input body domain.Supplier true "Необходимо указать данные поставщика."
+// @Param input body domain.InputSupplier true "Необходимо указать данные поставщика."
 // @Success 200 {object} domain.IdResponse
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse

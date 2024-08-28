@@ -14,8 +14,10 @@ var (
 	ErrColleaguesNotFound  = errors.New("colleagues doesn`t exists")
 	ErrAvatarNotFound      = errors.New("avatar doesn`t exists")
 	ErrUserAvatarNotFound  = errors.New("user_not_found")
+	ErrWarehouseNotFound   = errors.New("warehouse doesn`t exists")
+	ErrSupplierNotFound    = errors.New("supplier doesn`t exists")
 
-	ErrUserAlreadyExists = errors.New("user with such email or id already exists")
+	ErrUserAlreadyExists = errors.New("user with such username already exists")
 
 	ErrGeneratePassword = errors.New("can`t to generate new password for user")
 	ErrGenerateUUID     = errors.New("can`t to generate uuid")
@@ -72,10 +74,12 @@ var (
 
 	ErrCompanyNotApproved = errors.New("company_not_approved")
 	ErrCompanyBlocked     = errors.New("company_blocked")
-	ErrUserNotApproved    = errors.New("user_not_approved")
+	ErrUserIsNotApproved  = errors.New("user is not approved")
 	ErrUserBlocked        = errors.New("user_blocked")
+	ErrUserIsNotActive    = errors.New("user is not active")
 
-	ErrNotAllowed = errors.New("not allowed")
+	ErrNotAllowed     = errors.New("not allowed")
+	ErrRoleNotAllowed = errors.New("role not allowed")
 
 	ErrSignOut          = errors.New("error occurred during sign out. please try again later or contact support if the problem persists")
 	ErrRefreshToken     = errors.New("error occurred during refresh token")

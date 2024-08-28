@@ -11,8 +11,8 @@ type JWTInfo struct {
 
 type RefreshSession struct {
 	ID        int       `msgpack:"id"`
-	UserID    string    `msgpack:"user_id"`
-	CompanyID string    `msgpack:"company_id"`
+	UserID    int64     `msgpack:"user_id"`
+	CompanyID int64     `msgpack:"company_id"`
 	Role      string    `msgpack:"role"`
 	Token     string    `msgpack:"token"`
 	ExpiresAt time.Time `msgpack:"expires_at"`

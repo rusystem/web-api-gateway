@@ -1,0 +1,723 @@
+basePath: /api/web-api-gateway/v1
+definitions:
+  domain.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.IdResponse:
+    properties:
+      id: {}
+    type: object
+  domain.InputSupplier:
+    properties:
+      actual_address:
+        description: Фактический адрес поставщика
+        example: Фактический адрес поставщика
+        type: string
+      balance:
+        description: Баланс по поставщику
+        example: 100
+        type: number
+      bank_details:
+        description: Банковские реквизиты поставщика
+        example: Банковские реквизиты поставщика
+        type: string
+      comments:
+        description: Комментарии
+        example: Комментарии
+        type: string
+      contact_person:
+        description: Контактное лицо у поставщика
+        example: Контактное лицо у поставщика
+        maxLength: 140
+        type: string
+      contract_number:
+        description: Номер и дата договора с поставщиком
+        example: Номер и дата договора с поставщиком
+        type: string
+      country:
+        description: Страна поставщика
+        example: Страна поставщика
+        type: string
+      email:
+        description: Электронная почта поставщика
+        example: Электронная почта поставщика
+        type: string
+      files:
+        description: Ссылки на файлы или документы
+        example: Ссылки на файлы или документы
+        type: string
+      is_active:
+        description: Статус активности поставщика (активен/неактивен)
+        example: true
+        type: boolean
+      legal_address:
+        description: Юридический адрес поставщика
+        example: Юридический адрес поставщика
+        type: string
+      name:
+        description: Наименование поставщика
+        example: ООО Название поставщика
+        maxLength: 140
+        minLength: 5
+        type: string
+      other_fields:
+        additionalProperties: true
+        description: Дополнительные пользовательские поля
+        type: object
+      payment_terms:
+        description: Условия оплаты по контракту
+        example: Условия оплаты по контракту
+        type: string
+      phone:
+        description: Телефон поставщика
+        example: Телефон поставщика
+        minLength: 5
+        type: string
+      product_categories:
+        description: Категории товаров, поставляемых поставщиком
+        example: Категории товаров, поставляемых поставщиком
+        type: string
+      product_types:
+        description: Количество типов товаров от поставщика
+        example: 100
+        type: integer
+      purchase_amount:
+        description: Общая сумма закупок у поставщика
+        example: 100
+        type: number
+      region:
+        description: Регион или штат поставщика
+        example: Регион или штат поставщика
+        type: string
+      registration_date:
+        description: Дата регистрации поставщика
+        example: "2022-01-01T00:00:00Z"
+        type: string
+      tax_id:
+        description: Идентификационный номер налогоплательщика (ИНН)
+        example: Идентификационный номер налогоплательщика (ИНН)
+        type: string
+      warehouse_address:
+        description: Адрес склада поставщика
+        example: Адрес склада поставщика
+        type: string
+      website:
+        description: Сайт поставщика
+        example: Сайт поставщика
+        type: string
+    required:
+    - actual_address
+    - balance
+    - bank_details
+    - contact_person
+    - contract_number
+    - legal_address
+    - name
+    - phone
+    - warehouse_address
+    type: object
+  domain.InputWarehouse:
+    properties:
+      address:
+        description: Адрес склада
+        example: Адрес склада
+        maxLength: 140
+        minLength: 5
+        type: string
+      country:
+        description: Страна склада
+        example: Страна склада
+        type: string
+      current_occupancy:
+        description: Текущая заполняемость склада
+        example: 50
+        type: integer
+      email:
+        description: Электронная почта для связи
+        example: Электронная почта для связи
+        type: string
+      max_capacity:
+        description: Максимальная вместимость склада
+        example: 100
+        type: integer
+      name:
+        description: Название склада
+        example: Название склада
+        maxLength: 140
+        minLength: 5
+        type: string
+      other_fields:
+        additionalProperties: true
+        description: Дополнительные пользовательские поля
+        type: object
+      phone:
+        description: Контактный телефон склада
+        example: Контактный телефон склада
+        minLength: 5
+        type: string
+      responsible_person:
+        description: Ответственное лицо за склад
+        example: Ответственное лицо за склад
+        maxLength: 140
+        minLength: 5
+        type: string
+    required:
+    - address
+    - name
+    - phone
+    - responsible_person
+    type: object
+  domain.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.SignIn:
+    properties:
+      password:
+        example: pomogatoradmin
+        maxLength: 255
+        minLength: 8
+        type: string
+      username:
+        example: admin
+        maxLength: 140
+        minLength: 5
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  domain.SignUp:
+    properties:
+      company_id:
+        example: 1
+        type: integer
+      country:
+        example: KZ
+        type: string
+      email:
+        example: dmitry@test.com
+        maxLength: 140
+        minLength: 5
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      is_approved:
+        example: true
+        type: boolean
+      is_send_system_notification:
+        example: false
+        type: boolean
+      language:
+        example: ru
+        type: string
+      password:
+        example: "12345678"
+        maxLength: 255
+        minLength: 8
+        type: string
+      phone:
+        example: "+77777777777"
+        maxLength: 140
+        minLength: 7
+        type: string
+      position:
+        example: test
+        type: string
+      role:
+        example: user
+        type: string
+      sections:
+        example:
+        - '["full_company_access"'
+        - ' "full_access"]'
+        items:
+          type: string
+        type: array
+      username:
+        example: dmitry
+        maxLength: 140
+        minLength: 5
+        type: string
+    required:
+    - email
+    - password
+    - phone
+    - username
+    type: object
+  domain.SignUpResponse:
+    properties:
+      id:
+        type: integer
+      is_admin:
+        type: boolean
+    type: object
+  domain.Supplier:
+    properties:
+      actual_address:
+        description: Фактический адрес поставщика
+        type: string
+      balance:
+        description: Баланс по поставщику
+        type: number
+      bank_details:
+        description: Банковские реквизиты поставщика
+        type: string
+      comments:
+        description: Комментарии
+        type: string
+      contact_person:
+        description: Контактное лицо у поставщика
+        type: string
+      contract_number:
+        description: Номер и дата договора с поставщиком
+        type: string
+      country:
+        description: Страна поставщика
+        type: string
+      email:
+        description: Электронная почта поставщика
+        type: string
+      files:
+        description: Ссылки на файлы или документы
+        type: string
+      id:
+        description: Уникальный идентификатор поставщика
+        type: integer
+      is_active:
+        description: Статус активности поставщика (активен/неактивен)
+        type: boolean
+      legal_address:
+        description: Юридический адрес поставщика
+        type: string
+      name:
+        description: Наименование поставщика
+        maxLength: 140
+        minLength: 5
+        type: string
+      other_fields:
+        additionalProperties: true
+        description: Дополнительные пользовательские поля
+        type: object
+      payment_terms:
+        description: Условия оплаты по контракту
+        type: string
+      phone:
+        description: Телефон поставщика
+        type: string
+      product_categories:
+        description: Категории товаров, поставляемых поставщиком
+        type: string
+      product_types:
+        description: Количество типов товаров от поставщика
+        type: integer
+      purchase_amount:
+        description: Общая сумма закупок у поставщика
+        type: number
+      region:
+        description: Регион или штат поставщика
+        type: string
+      registration_date:
+        description: Дата регистрации поставщика
+        type: string
+      tax_id:
+        description: Идентификационный номер налогоплательщика (ИНН)
+        type: string
+      warehouse_address:
+        description: Адрес склада поставщика
+        type: string
+      website:
+        description: Сайт поставщика
+        type: string
+    required:
+    - name
+    - phone
+    type: object
+  domain.TokenResponse:
+    properties:
+      expires_in:
+        type: integer
+      refresh_token:
+        type: string
+      sections:
+        items:
+          type: string
+        type: array
+      token:
+        type: string
+    type: object
+  domain.TokensRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  domain.Warehouse:
+    properties:
+      address:
+        description: Адрес склада
+        type: string
+      country:
+        description: Страна склада
+        type: string
+      current_occupancy:
+        description: Текущая заполняемость склада
+        type: integer
+      email:
+        description: Электронная почта для связи
+        type: string
+      id:
+        description: Уникальный идентификатор склада
+        type: integer
+      max_capacity:
+        description: Максимальная вместимость склада
+        type: integer
+      name:
+        description: Название склада
+        type: string
+      other_fields:
+        additionalProperties: true
+        description: Дополнительные пользовательские поля
+        type: object
+      phone:
+        description: Контактный телефон склада
+        type: string
+      responsible_person:
+        description: Ответственное лицо за склад
+        type: string
+    type: object
+host: web-api.pomogator.kz
+info:
+  contact:
+    email: ru.system.ru@gmail.com
+    name: ru.system.ru@gmail.com
+  description: API gateway
+  title: Web api gateway API
+  version: "1.0"
+paths:
+  /auth:
+    post:
+      consumes:
+      - application/json
+      description: Аутентификация пользователя
+      operationId: sign-in
+      parameters:
+      - description: Необходимо указать данные для аутентификации пользователя.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Sign in
+      tags:
+      - auth
+  /auth/logout:
+    get:
+      consumes:
+      - application/json
+      description: Выход из аккаунта пользователя
+      operationId: sign-out
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Sign out
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Обновление access токена
+      operationId: refresh-tokens
+      parameters:
+      - description: Необходимо указать текущие refresh token и sections.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.TokensRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Refresh tokens
+      tags:
+      - auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация нового пользователя
+      operationId: sign-up
+      parameters:
+      - description: Необходимо указать данные для регистрации нового пользователя.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SignUp'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SignUpResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Sign up
+      tags:
+      - auth
+  /supplier:
+    post:
+      consumes:
+      - application/json
+      description: Создание поставщика
+      operationId: create-supplier
+      parameters:
+      - description: Необходимо указать данные поставщика.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.InputSupplier'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.IdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create supplier
+      tags:
+      - supplier
+  /supplier/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получение поставщика по id
+      operationId: get-supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Supplier'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get supplier by id
+      tags:
+      - supplier
+  /warehouse:
+    post:
+      consumes:
+      - application/json
+      description: Создание склада
+      operationId: create-warehouse
+      parameters:
+      - description: Необходимо указать данные склада.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.InputWarehouse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.IdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create warehouse
+      tags:
+      - warehouse
+  /warehouse/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Получение склада по id
+      operationId: get-warehouse
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Warehouse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get warehouse by id
+      tags:
+      - warehouse
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

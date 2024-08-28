@@ -12,3 +12,15 @@ type Warehouse struct {
 	OtherFields       map[string]interface{} `json:"other_fields"`         // Дополнительные пользовательские поля
 	Country           string                 `json:"country"`              // Страна склада
 }
+
+type InputWarehouse struct {
+	Name              string                 `json:"name" binding:"required,min=5,max=140" example:"Название склада"`                           // Название склада
+	Address           string                 `json:"address" binding:"required,min=5,max=140" example:"Адрес склада"`                           // Адрес склада
+	ResponsiblePerson string                 `json:"responsible_person" binding:"required,min=5,max=140" example:"Ответственное лицо за склад"` // Ответственное лицо за склад
+	Phone             string                 `json:"phone" binding:"required,min=5" example:"Контактный телефон склада"`                        // Контактный телефон склада
+	Email             string                 `json:"email" example:"Электронная почта для связи"`                                               // Электронная почта для связи
+	MaxCapacity       int64                  `json:"max_capacity" example:"100"`                                                                // Максимальная вместимость склада
+	CurrentOccupancy  int64                  `json:"current_occupancy" example:"50"`                                                            // Текущая заполняемость склада
+	OtherFields       map[string]interface{} `json:"other_fields"`                                                                              // Дополнительные пользовательские поля
+	Country           string                 `json:"country" example:"Страна склада"`                                                           // Страна склада
+}

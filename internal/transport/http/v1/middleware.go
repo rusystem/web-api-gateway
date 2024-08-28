@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	tools "github.com/rusystem/web-api-gateway/tool"
@@ -32,7 +31,7 @@ func (h *Handler) adminIdentity(c *gin.Context) {
 		return
 	}
 
-	if info.Role != domain.AdminRole {
+	if info.Role != domain.AdminRole && info.Role != domain.SuperAdminRole {
 		newResponse(c, http.StatusForbidden, "access denied")
 		return
 	}
@@ -68,24 +67,6 @@ func (h *Handler) parseAuthHeader(c *gin.Context) (domain.JWTInfo, error) {
 	}
 
 	return info, nil
-}
-
-func (h *Handler) isAdminTokenValid(c *gin.Context) bool {
-	header := c.GetHeader(authorizationHeader)
-	if header == "" {
-		return false
-	}
-
-	headerParts := strings.Split(header, " ")
-	if len(headerParts) != 2 || headerParts[0] != "Basic" {
-		return false
-	}
-
-	if len(headerParts[1]) == 0 {
-		return false
-	}
-
-	return headerParts[1] == tools.EncodeBase64(fmt.Sprintf("%s:%s", h.cfg.Auth.AdminLogin, h.cfg.Auth.AdminPassword))
 }
 
 func getUserInfo(c *gin.Context) (domain.JWTInfo, error) {
