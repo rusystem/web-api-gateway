@@ -9,7 +9,7 @@
         },
         "version": "1.0"
     },
-    "host": "web-api.pomogator.kz",
+    "host": "91.243.71.100:8080",
     "basePath": "/api/web-api-gateway/v1",
     "paths": {
         "/auth": {
@@ -732,7 +732,7 @@
                     "type": "string",
                     "maxLength": 255,
                     "minLength": 8,
-                    "example": "pomogatoradmin"
+                    "example": "admin"
                 },
                 "username": {
                     "type": "string",

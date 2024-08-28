@@ -177,7 +177,7 @@ definitions:
   domain.SignIn:
     properties:
       password:
-        example: pomogatoradmin
+        example: admin
         maxLength: 255
         minLength: 8
         type: string
@@ -391,7 +391,7 @@ definitions:
         description: Ответственное лицо за склад
         type: string
     type: object
-host: web-api.pomogator.kz
+host: 91.243.71.100:8080
 info:
   contact:
     email: ru.system.ru@gmail.com

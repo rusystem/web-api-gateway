@@ -1,0 +1,34 @@
+name: Deploy Web-API-Gateway
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Copy files to the server
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          ./web-api-gateway/ ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/web-api-gateway/
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          ./docker-compose.yml ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/
+
+      - name: Deploy Web-API-Gateway
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@91.243.71.100 << 'EOF'
+          cd /path/to/project
+          docker-compose down web-api-gateway
+          docker-compose up -d web-api-gateway
+          EOF
