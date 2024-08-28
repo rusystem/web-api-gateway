@@ -16,24 +16,18 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
-      - name: Check directory structure
-        run: |
-          pwd
-          ls -la
-
       - name: Copy files to the server
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
           -e "ssh -o StrictHostKeyChecking=no" \
-          ./web-api-gateway/ ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/web-api-gateway/
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" rsync -avz --delete \
+          ./home/runner/work/web-api-gateway/web-api-gateway/ ${{ secrets.SSH_USERNAME }}@remote_server:/home/pomogator/web-api-gateway
           -e "ssh -o StrictHostKeyChecking=no" \
-          ./docker-compose.yml ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/
+          ./home/runner/work/web-api-gateway/web-api-gateway/docker-compose.yml ${{ secrets.SSH_USERNAME }}@91.243.71.100:/home/pomogator/
 
       - name: Deploy Web-API-Gateway
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@91.243.71.100 << 'EOF'
-          cd /path/to/project
+          cd /home/pomogator
           docker-compose down web-api-gateway
           docker-compose up -d web-api-gateway
           EOF
