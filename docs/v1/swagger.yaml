@@ -391,7 +391,7 @@ definitions:
         description: Ответственное лицо за склад
         type: string
     type: object
-host: localhost:8080
+host: 91.243.71.100:8080
 info:
   contact:
     email: ru.system.ru@gmail.com
