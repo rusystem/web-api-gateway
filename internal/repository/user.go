@@ -3,10 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/rusystem/cache"
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/internal/repository/database"
-	"github.com/rusystem/web-api-gateway/internal/repository/inmemory"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 )
 
@@ -21,14 +20,14 @@ type User interface {
 
 type UserRepository struct {
 	cfg   *config.Config
-	cache inmemory.User
+	cache *cache.MemoryCache
 	db    database.User
 }
 
-func NewUserRepository(cfg *config.Config, cache *memcache.Client, db *sql.DB) *UserRepository {
+func NewUserRepository(cfg *config.Config, cache *cache.MemoryCache, db *sql.DB) *UserRepository {
 	return &UserRepository{
 		cfg:   cfg,
-		cache: inmemory.NewUserCacheRepository(cfg, cache),
+		cache: cache,
 		db:    database.NewUserDatabase(db),
 	}
 }

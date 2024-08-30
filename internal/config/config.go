@@ -14,7 +14,6 @@ const (
 
 type Config struct {
 	Postgres Postgres
-	Memcache Memcache
 	Url      Url
 	Limiter  Limiter `mapstructure:"limiter"`
 	Auth     Auth    `mapstructure:"auth"`
@@ -38,11 +37,6 @@ type Postgres struct {
 	SSLMode  string
 }
 
-type Memcache struct {
-	Host string
-	Port int64
-}
-
 type Url struct {
 	Warehouse string
 }
@@ -57,8 +51,6 @@ type Auth struct {
 	AccessTokenTTL  time.Duration `mapstructure:"accessTokenTTL"`
 	RefreshTokenTTL time.Duration `mapstructure:"refreshTokenTTL"`
 	SigningKey      string        `vault:"auth_signing_key"`
-	AdminLogin      string        `vault:"auth_admin_login"`
-	AdminPassword   string        `vault:"auth_admin_password"`
 }
 
 func New(isProd bool) (*Config, error) {
@@ -81,10 +73,6 @@ func New(isProd bool) (*Config, error) {
 	}
 
 	if err := envconfig.Process("postgres", &cfg.Postgres); err != nil {
-		return nil, err
-	}
-
-	if err := envconfig.Process("memcache", &cfg.Memcache); err != nil {
 		return nil, err
 	}
 

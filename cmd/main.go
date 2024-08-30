@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"github.com/rusystem/cache"
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/internal/repository"
 	http_server "github.com/rusystem/web-api-gateway/internal/server/http"
@@ -46,16 +47,16 @@ func main() {
 		logger.Fatal(fmt.Sprintf("failed to initialize config, err: %v", err))
 	}
 
+	// init in-memory cache
+	memCache := cache.New()
+	if err != nil {
+		logger.Fatal(fmt.Sprintf("failed to initialize cache, err: %v", err))
+	}
+
 	// init token manager
 	tokenManager, err := auth.NewManager(cfg.Auth.SigningKey)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("failed to initialize token manager, err: %v", err))
-	}
-
-	// init memcache
-	mc, err := database.NewMemcache(cfg)
-	if err != nil {
-		logger.Fatal(fmt.Sprintf("failed to initialize memcache, err: %v", err))
 	}
 
 	// init postgres connection
@@ -95,7 +96,7 @@ func main() {
 	}(whClient)
 
 	// init dep-s
-	repo := repository.New(cfg, mc, pc)
+	repo := repository.New(cfg, memCache, pc)
 	srv := service.New(cfg, repo, tokenManager, splClient, whClient)
 	hh := http_handler.NewHandler(srv, tokenManager, cfg)
 

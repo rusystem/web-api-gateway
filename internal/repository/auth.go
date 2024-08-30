@@ -3,10 +3,9 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"github.com/bradfitz/gomemcache/memcache"
+	"github.com/rusystem/cache"
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/internal/repository/database"
-	"github.com/rusystem/web-api-gateway/internal/repository/inmemory"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 )
 
@@ -20,14 +19,14 @@ type Auth interface {
 
 type AuthRepository struct {
 	cfg   *config.Config
-	cache inmemory.Auth
+	cache *cache.MemoryCache
 	db    database.Auth
 }
 
-func NewAuthRepository(cfg *config.Config, cache *memcache.Client, db *sql.DB) *AuthRepository {
+func NewAuthRepository(cfg *config.Config, cache *cache.MemoryCache, db *sql.DB) *AuthRepository {
 	return &AuthRepository{
 		cfg:   cfg,
-		cache: inmemory.NewAuthCacheRepository(cfg, cache),
+		cache: cache,
 		db:    database.NewAuthRepository(db),
 	}
 }
