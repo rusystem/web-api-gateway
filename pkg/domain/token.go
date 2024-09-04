@@ -3,8 +3,8 @@ package domain
 import "time"
 
 type JWTInfo struct {
-	UserId      string
-	CompanyId   string
+	UserId      int64
+	CompanyId   int64
 	Role        string
 	Fingerprint string
 }
@@ -20,8 +20,7 @@ type RefreshSession struct {
 }
 
 type TokenResponse struct {
-	AccessToken  string   `json:"token"`
-	RefreshToken string   `json:"refresh_token"`
-	ExpiresIn    int64    `json:"expires_in"`
-	Sections     []string `json:"sections,omitempty"`
+	AccessToken  string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int64  `json:"expires_in"`
 }

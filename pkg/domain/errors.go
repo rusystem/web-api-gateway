@@ -78,8 +78,9 @@ var (
 	ErrUserBlocked        = errors.New("user_blocked")
 	ErrUserIsNotActive    = errors.New("user is not active")
 
-	ErrNotAllowed     = errors.New("not allowed")
-	ErrRoleNotAllowed = errors.New("role not allowed")
+	ErrNotAllowed         = errors.New("not allowed")
+	ErrRoleNotAllowed     = errors.New("role not allowed")
+	ErrSectionsNotAllowed = errors.New("sections not allowed")
 
 	ErrSignOut          = errors.New("error occurred during sign out. please try again later or contact support if the problem persists")
 	ErrRefreshToken     = errors.New("error occurred during refresh token")

@@ -1,8 +1,9 @@
 package domain
 
 type SignIn struct {
-	Username string `json:"username" binding:"required,min=5,max=140" example:"admin"`
-	Password string `json:"password" binding:"required,min=8,max=255" example:"admin"`
+	Username  string `json:"username" binding:"required,min=5,max=140" example:"admin"`
+	Password  string `json:"password" binding:"required,min=8,max=255" example:"admin"`
+	CompanyId int64  `json:"company_id" example:"1"`
 }
 
 type EmailInput struct {

@@ -176,6 +176,9 @@ definitions:
     type: object
   domain.SignIn:
     properties:
+      company_id:
+        example: 1
+        type: integer
       password:
         example: admin
         maxLength: 255
@@ -343,10 +346,6 @@ definitions:
         type: integer
       refresh_token:
         type: string
-      sections:
-        items:
-          type: string
-        type: array
       token:
         type: string
     type: object
@@ -404,7 +403,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: Аутентификация пользователя
+      description: Аутентификация пользователя. \n Только у super admin есть возможность
+        авторизоваться под определенной компанией.
       operationId: sign-in
       parameters:
       - description: Необходимо указать данные для аутентификации пользователя.
@@ -516,7 +516,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: Регистрация нового пользователя
+      description: Регистрация нового пользователя. \nТолько у супер пользователя
+        есть возможность добавлять пользователя в другие компании. \nТолько у супер
+        пользователя есть возможность давать роль admin пользователю
       operationId: sign-up
       parameters:
       - description: Необходимо указать данные для регистрации нового пользователя.

@@ -126,6 +126,7 @@ func IsFullAccessSection(sections []string) bool {
 	return false
 }
 
+// IsAllowedRole returns true if role is allowed
 func IsAllowedRole(role string) bool {
 	if role == "" {
 		return true

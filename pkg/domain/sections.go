@@ -9,3 +9,13 @@ const (
 	StatusAndCalculateAccessSection = "status_and_calculate_access" // Менеджер. Доступ к статусу заказа и калькуляции.
 	PurchasePlanningAccessSection   = "purchase_planning_access"    // Снабженец. Доступ к заявкам на закуп и планированию закупок.
 )
+
+func IsFullAccessSection(sections []string) bool {
+	for _, s := range sections {
+		if s == FullAllAccessSection {
+			return true
+		}
+	}
+
+	return false
+}

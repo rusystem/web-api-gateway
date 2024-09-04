@@ -28,7 +28,7 @@ func (h *Handler) initAuthRoutes(api *gin.RouterGroup) {
 
 // @Summary Sign in
 // @Tags auth
-// @Description Аутентификация пользователя
+// @Description Аутентификация пользователя. \n Только у super admin есть возможность авторизоваться под определенной компанией.
 // @ID sign-in
 // @Accept json
 // @Produce json
@@ -57,6 +57,11 @@ func (h *Handler) signIn(c *gin.Context) {
 			return
 		}
 
+		if errors.Is(err, domain.ErrCompanyNotFound) {
+			newResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
+
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -65,7 +70,6 @@ func (h *Handler) signIn(c *gin.Context) {
 		AccessToken:  res.AccessToken,
 		RefreshToken: res.RefreshToken,
 		ExpiresIn:    res.ExpiresIn,
-		Sections:     res.Sections,
 	})
 }
 
@@ -103,14 +107,13 @@ func (h *Handler) refresh(c *gin.Context) {
 		AccessToken:  res.AccessToken,
 		RefreshToken: res.RefreshToken,
 		ExpiresIn:    res.ExpiresIn,
-		Sections:     res.Sections,
 	})
 }
 
 // @Summary Sign up
 // @Security ApiKeyAuth
 // @Tags auth
-// @Description Регистрация нового пользователя
+// @Description Регистрация нового пользователя. \nТолько у супер пользователя есть возможность добавлять пользователя в другие компании. \nТолько у супер пользователя есть возможность давать роль admin пользователю
 // @ID sign-up
 // @Accept json
 // @Produce json
@@ -121,9 +124,6 @@ func (h *Handler) refresh(c *gin.Context) {
 // @Failure default {object} domain.ErrorResponse
 // @Router /register [POST]
 func (h *Handler) signUp(c *gin.Context) {
-	//только у супер пользователя есть возможность добавлять пользователя в другие компании
-	//только у супер пользователя есть возможность давать admin роль пользователю
-
 	var inp domain.SignUp
 	if err := c.BindJSON(&inp); err != nil {
 		newResponse(c, http.StatusBadRequest, domain.ErrInvalidInputBody.Error())
@@ -150,6 +150,16 @@ func (h *Handler) signUp(c *gin.Context) {
 
 		if errors.Is(err, domain.ErrUserAlreadyExists) {
 			newResponse(c, http.StatusConflict, err.Error())
+			return
+		}
+
+		if errors.Is(err, domain.ErrSectionsNotAllowed) {
+			newResponse(c, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		if errors.Is(err, domain.ErrCompanyNotFound) {
+			newResponse(c, http.StatusBadRequest, err.Error())
 			return
 		}
 

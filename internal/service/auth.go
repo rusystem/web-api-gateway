@@ -14,13 +14,12 @@ import (
 	tools "github.com/rusystem/web-api-gateway/tool"
 	"golang.org/x/crypto/bcrypt"
 	"reflect"
-	"strconv"
 	"time"
 )
 
 type Auth interface {
 	SignIn(c *gin.Context, input domain.SignIn) (domain.TokenResponse, error)
-	SignOut(c *gin.Context, userId, companyId string) error
+	SignOut(c *gin.Context, userId, companyId int64) error
 	SignUp(c *gin.Context, input domain.SignUp, info domain.JWTInfo) (int64, bool, error)
 	RefreshTokens(c *gin.Context, refreshToken string) (domain.TokenResponse, error)
 	ValidateAccessToken(c *gin.Context, token, userAgent, ip string) (domain.JWTInfo, bool, error)
@@ -60,21 +59,25 @@ func (as *AuthServices) SignIn(c *gin.Context, input domain.SignIn) (domain.Toke
 		return domain.TokenResponse{}, domain.ErrUserIsNotApproved
 	}
 
+	// check if user has full access to the company
+	if input.CompanyId != 0 && tools.IsFullAccessSection(user.Sections) {
+		isExist, err := as.repo.Company.IsExist(c.Request.Context(), input.CompanyId)
+		if err != nil {
+			return domain.TokenResponse{}, err
+		}
+
+		if !isExist {
+			return domain.TokenResponse{}, domain.ErrCompanyNotFound
+		}
+
+		user.CompanyID = input.CompanyId
+	}
+
 	return as.createSession(c, user)
 }
 
-func (as *AuthServices) SignOut(c *gin.Context, userId, companyId string) error {
-	uId, err := strconv.ParseInt(userId, 10, 64)
-	if err != nil {
-		return err
-	}
-
-	cId, err := strconv.ParseInt(companyId, 10, 64)
-	if err != nil {
-		return err
-	}
-
-	if err := as.repo.Auth.DeleteUserTokens(c.Request.Context(), uId, cId); err != nil {
+func (as *AuthServices) SignOut(c *gin.Context, userId, companyId int64) error {
+	if err := as.repo.Auth.DeleteUserTokens(c.Request.Context(), userId, companyId); err != nil {
 		return domain.ErrSignOut
 	}
 
@@ -82,12 +85,7 @@ func (as *AuthServices) SignOut(c *gin.Context, userId, companyId string) error 
 }
 
 func (as *AuthServices) SignUp(c *gin.Context, input domain.SignUp, info domain.JWTInfo) (int64, bool, error) {
-	authUserId, err := strconv.ParseInt(info.UserId, 10, 64)
-	if err != nil {
-		return 0, false, err
-	}
-
-	authUser, err := as.repo.User.GetById(c.Request.Context(), authUserId)
+	authUser, err := as.repo.User.GetById(c.Request.Context(), info.UserId)
 	if err != nil {
 		return 0, false, domain.ErrRoleNotAllowed
 	}
@@ -100,32 +98,45 @@ func (as *AuthServices) SignUp(c *gin.Context, input domain.SignUp, info domain.
 		return 0, false, domain.ErrUserIsNotApproved
 	}
 
-	if input.Role == domain.AdminRole {
-		if !tools.IsFullAccessSection(authUser.Sections) {
-			return 0, false, domain.ErrRoleNotAllowed
-		}
+	// проверяем чтобы не создавали админ пользователей простые смертные
+	if input.Role == domain.AdminRole && !tools.IsFullAccessSection(authUser.Sections) {
+		return 0, false, domain.ErrRoleNotAllowed
 	}
 
 	if input.Role == "" {
 		input.Role = domain.UserRole
 	}
 
-	if input.CompanyId != 0 {
-		if !tools.IsFullAccessSection(authUser.Sections) {
-			return 0, false, domain.ErrRoleNotAllowed
-		}
+	if input.CompanyId != 0 && !tools.IsFullAccessSection(authUser.Sections) {
+		return 0, false, domain.ErrRoleNotAllowed
 	}
 
 	if input.CompanyId == 0 {
-		input.CompanyId, err = strconv.ParseInt(info.CompanyId, 10, 64)
+		input.CompanyId = info.CompanyId
+	}
+
+	if input.CompanyId != 0 {
+		isExist, err := as.repo.Company.IsExist(c.Request.Context(), input.CompanyId)
 		if err != nil {
+			if errors.Is(err, domain.ErrCompanyNotFound) {
+				return 0, false, domain.ErrCompanyNotFound
+			}
+
 			return 0, false, err
+		}
+
+		if !isExist {
+			return 0, false, domain.ErrCompanyNotFound
 		}
 	}
 
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return 0, false, domain.ErrCreateUser
+	}
+
+	if tools.IsFullAccessSection(input.Sections) {
+		return 0, false, domain.ErrSectionsNotAllowed
 	}
 
 	id, err := as.repo.User.Create(c.Request.Context(), domain.User{
@@ -174,16 +185,10 @@ func (as *AuthServices) RefreshTokens(c *gin.Context, refreshToken string) (doma
 		return domain.TokenResponse{}, domain.ErrInvalidRefreshToken
 	}
 
-	sections, err := as.repo.User.GetSections(c.Request.Context(), session.UserID)
-	if err != nil {
-		return domain.TokenResponse{}, domain.ErrRefreshToken
-	}
-
 	resp, err := as.createSession(c, domain.User{
 		ID:        session.UserID,
 		Role:      session.Role,
 		CompanyID: session.CompanyID,
-		Sections:  sections,
 	})
 	if err != nil {
 		return domain.TokenResponse{}, domain.ErrRefreshToken
@@ -216,9 +221,9 @@ func (as *AuthServices) createSession(ctx *gin.Context, user domain.User) (domai
 
 	res.AccessToken, err = as.tokenManager.NewJWT(
 		domain.JWTInfo{
-			UserId:      strconv.FormatInt(user.ID, 10),
+			UserId:      user.ID,
 			Role:        user.Role,
-			CompanyId:   strconv.FormatInt(user.CompanyID, 10),
+			CompanyId:   user.CompanyID,
 			Fingerprint: fingerprint,
 		}, as.cfg.Auth.AccessTokenTTL)
 	if err != nil {
@@ -231,8 +236,6 @@ func (as *AuthServices) createSession(ctx *gin.Context, user domain.User) (domai
 	}
 
 	res.ExpiresIn = time.Now().UTC().Add(as.cfg.Auth.RefreshTokenTTL).Unix()
-
-	res.Sections = user.Sections
 
 	if err = as.repo.Auth.CreateToken(ctx, domain.RefreshSession{
 		UserID:    user.ID,

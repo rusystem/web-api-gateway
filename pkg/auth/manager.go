@@ -6,6 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -31,9 +32,9 @@ func NewManager(signingKey string) (*Manager, error) {
 func (m *Manager) NewJWT(info domain.JWTInfo, ttl time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: time.Now().UTC().Add(ttl).Unix(),
-		Id:        info.UserId,
+		Id:        strconv.Itoa(int(info.UserId)),
 		Audience:  info.Role,
-		Subject:   info.CompanyId,
+		Subject:   strconv.Itoa(int(info.CompanyId)),
 		Issuer:    info.Fingerprint,
 	})
 
@@ -58,9 +59,9 @@ func (m *Manager) Parse(accessToken string) (domain.JWTInfo, error) {
 	}
 
 	info := domain.JWTInfo{
-		UserId:      claims["jti"].(string),
+		UserId:      claims["jti"].(int64),
 		Role:        claims["aud"].(string),
-		CompanyId:   claims["sub"].(string),
+		CompanyId:   claims["sub"].(int64),
 		Fingerprint: claims["iss"].(string),
 	}
 

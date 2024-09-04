@@ -20,7 +20,7 @@ const docTemplate = `{
     "paths": {
         "/auth": {
             "post": {
-                "description": "Аутентификация пользователя",
+                "description": "Аутентификация пользователя. \\n Только у super admin есть возможность авторизоваться под определенной компанией.",
                 "consumes": [
                     "application/json"
                 ],
@@ -196,7 +196,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Регистрация нового пользователя",
+                "description": "Регистрация нового пользователя. \\nТолько у супер пользователя есть возможность добавлять пользователя в другие компании. \\nТолько у супер пользователя есть возможность давать роль admin пользователю",
                 "consumes": [
                     "application/json"
                 ],
@@ -734,6 +734,10 @@ const docTemplate = `{
                 "username"
             ],
             "properties": {
+                "company_id": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "password": {
                     "type": "string",
                     "maxLength": 255,
@@ -952,12 +956,6 @@ const docTemplate = `{
                 },
                 "refresh_token": {
                     "type": "string"
-                },
-                "sections": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 },
                 "token": {
                     "type": "string"

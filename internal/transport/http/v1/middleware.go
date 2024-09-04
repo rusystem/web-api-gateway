@@ -31,7 +31,7 @@ func (h *Handler) adminIdentity(c *gin.Context) {
 		return
 	}
 
-	if info.Role != domain.AdminRole && info.Role != domain.SuperAdminRole {
+	if info.Role != domain.AdminRole {
 		newResponse(c, http.StatusForbidden, "access denied")
 		return
 	}

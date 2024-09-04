@@ -7,13 +7,15 @@ import (
 )
 
 type Repository struct {
-	Auth Auth
-	User User
+	Auth    Auth
+	User    User
+	Company Company
 }
 
 func New(cfg *config.Config, cache *cache.MemoryCache, pc *sql.DB) *Repository {
 	return &Repository{
-		Auth: NewAuthRepository(cfg, cache, pc),
-		User: NewUserRepository(cfg, cache, pc),
+		Auth:    NewAuthRepository(cfg, cache, pc),
+		User:    NewUserRepository(cfg, cache, pc),
+		Company: NewCompanyRepository(cfg, cache, pc),
 	}
 }
