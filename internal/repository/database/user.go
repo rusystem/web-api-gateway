@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/lib/pq"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"time"
 )
@@ -15,8 +14,6 @@ type User interface {
 	GetByUsername(ctx context.Context, username string) (domain.User, error)
 	GetSections(ctx context.Context, id int64) ([]string, error)
 	GetById(ctx context.Context, id int64) (domain.User, error)
-	Create(ctx context.Context, user domain.User) (int64, error)
-	Update(ctx context.Context, user domain.User) error
 	UpdateLastLogin(ctx context.Context, id int64) error
 }
 
@@ -139,59 +136,6 @@ func (udr *UserDatabaseRepository) GetById(ctx context.Context, id int64) (domai
 	}
 
 	return user, nil
-}
-
-func (udr *UserDatabaseRepository) Create(ctx context.Context, user domain.User) (int64, error) {
-	query := fmt.Sprintf(`
-        INSERT INTO %s
-        (company_id, username, email, phone, password_hash, created_at, updated_at, last_login, is_active,
-         role, language, country, is_approved, is_send_system_notification, sections, position)
-        VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-        RETURNING id`, domain.UsersTable)
-
-	sectionsJSON, err := json.Marshal(user.Sections)
-	if err != nil {
-		return 0, err
-	}
-
-	var id int64
-	err = udr.db.QueryRowContext(ctx, query,
-		user.CompanyID,
-		user.Username,
-		user.Email,
-		user.Phone,
-		user.PasswordHash,
-		time.Now().UTC(),
-		time.Now().UTC(),
-		user.LastLogin,
-		user.IsActive,
-		user.Role,
-		user.Language,
-		user.Country,
-		user.IsApproved,
-		user.IsSendSystemNotification,
-		sectionsJSON,
-		user.Position,
-	).Scan(&id)
-
-	if err != nil {
-		var pqErr *pq.Error
-		if errors.As(err, &pqErr) {
-			if pqErr.Code == "23505" {
-				return 0, domain.ErrUserAlreadyExists
-			}
-		}
-
-		return 0, err
-	}
-
-	return id, nil
-}
-
-func (udr *UserDatabaseRepository) Update(ctx context.Context, user domain.User) error {
-	//todo
-	return nil
 }
 
 func (udr *UserDatabaseRepository) UpdateLastLogin(ctx context.Context, id int64) error {

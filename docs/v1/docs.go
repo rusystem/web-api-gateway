@@ -20,7 +20,7 @@ const docTemplate = `{
     "paths": {
         "/auth": {
             "post": {
-                "description": "Аутентификация пользователя.\\nТолько у super admin есть возможность авторизоваться под определенной компанией.",
+                "description": "Аутентификация пользователя.\nТолько у super admin есть возможность авторизоваться под определенной компанией.",
                 "consumes": [
                     "application/json"
                 ],
@@ -189,6 +189,370 @@ const docTemplate = `{
                 }
             }
         },
+        "/company/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение информации по всем компаниям.\nТолько super admin может получать информацию.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Get companies",
+                "operationId": "get-companies",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Company"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Создание компании.\nТолько super admin может создавать компании",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Create company",
+                "operationId": "create-company",
+                "parameters": [
+                    {
+                        "description": "Company info",
+                        "name": "company",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CreateCompany"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/company/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение информации о компании для пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Get company info",
+                "operationId": "get-company-info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Company"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/company/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение информации о компании по ID.\nТолько super admin может получать информацию по id компании.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Get company",
+                "operationId": "get-company",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Company ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Company"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление компании.\nТолько super admin может обновлять active \u0026 approve компании\nДля обновления указывать только необходимые поля.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Update company",
+                "operationId": "update-company",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Company ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Company info",
+                        "name": "company",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CompanyUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление компании.\nТолько super admin может удалять компании.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "company"
+                ],
+                "summary": "Delete company",
+                "operationId": "delete-company",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Company ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.MessageResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "security": [
@@ -196,7 +560,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Регистрация нового пользователя.\\nТолько у super admin есть возможность добавлять пользователя в другие компании.\\nТолько у super admin есть возможность давать роль admin пользователю",
+                "description": "Регистрация нового пользователя.\nТолько у super admin есть возможность добавлять пользователя в другие компании.\nТолько у super admin есть возможность давать роль admin пользователю",
                 "consumes": [
                     "application/json"
                 ],
@@ -253,7 +617,367 @@ const docTemplate = `{
                 }
             }
         },
+        "/sections": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение списка секций",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sections"
+                ],
+                "summary": "Get sections",
+                "operationId": "get-sections",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Section"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Создание секции\nТолько super admin может создавать секции",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sections"
+                ],
+                "summary": "Create section",
+                "operationId": "create-section",
+                "parameters": [
+                    {
+                        "description": "Section",
+                        "name": "section",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SectionCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sections/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение секции по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sections"
+                ],
+                "summary": "Get section",
+                "operationId": "get-section",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Section ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Section"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление секции",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sections"
+                ],
+                "summary": "Update section",
+                "operationId": "update-section",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Section ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Section",
+                        "name": "section",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SectionUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление секции",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sections"
+                ],
+                "summary": "Delete section",
+                "operationId": "delete-section",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "Section ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/supplier": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение всех поставщиков компании",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "supplier"
+                ],
+                "summary": "Get suppliers",
+                "operationId": "get-suppliers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Supplier"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -351,6 +1075,494 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/domain.Supplier"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление поставщика",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "supplier"
+                ],
+                "summary": "Update supplier",
+                "operationId": "update-supplier",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID поставщика",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Необходимо указать данные поставщика.",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdateSupplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление поставщика своей компании",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "supplier"
+                ],
+                "summary": "Delete supplier",
+                "operationId": "delete-supplier",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID поставщика",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/company": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение списка пользователей компании.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get users",
+                "operationId": "get-users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.UserResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/info": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение информации о пользователе.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get user info",
+                "operationId": "get-user-info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/profile": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление информации о пользователе.\nНеобходимо передавать только измененные данные.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update user profile",
+                "operationId": "update-user-profile",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UserProfileUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение информации о пользователе по id.\nТолько super admin может получать информацию по id пользователя.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get user",
+                "operationId": "get-user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.UserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление информации о пользователе по id.\nНеобходимо передавать только измененные данные.\nТолько super admin может обновлять информацию по любому id пользователя.\nТолько admin может обновлять информацию по id пользователя в рамках своей компании.\nТолько super admin может менять role для пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update user",
+                "operationId": "update-user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "example": 1,
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UserUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление пользователя по id.\nТолько super admin может удалить пользователя по id.\nТолько admin может удалить пользователя в рамках своей компании.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Delete user",
+                "operationId": "delete-user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",
@@ -499,7 +1711,7 @@ const docTemplate = `{
                     "default": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/domain.ErrorResponse"
+                            "$ref": "#/definitions/v1.response"
                         }
                     }
                 }
@@ -507,6 +1719,136 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "domain.Company": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_approved": {
+                    "type": "boolean"
+                },
+                "name_en": {
+                    "type": "string"
+                },
+                "name_ru": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "website": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CompanyUpdate": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_approved": {
+                    "type": "boolean"
+                },
+                "name_en": {
+                    "type": "string"
+                },
+                "name_ru": {
+                    "type": "string"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "website": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.CreateCompany": {
+            "type": "object",
+            "required": [
+                "address",
+                "email",
+                "name_ru",
+                "phone"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "example": "г. Алматы"
+                },
+                "country": {
+                    "type": "string",
+                    "example": "KZ"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "example@example.com"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_approved": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name_en": {
+                    "type": "string",
+                    "example": "OOO ROGA I COPUTA"
+                },
+                "name_ru": {
+                    "type": "string",
+                    "example": "ООО Рога и копыта"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+77777777777"
+                },
+                "timezone": {
+                    "type": "string",
+                    "example": "Asia/Almaty"
+                },
+                "website": {
+                    "type": "string",
+                    "example": "www.rogakopyta.kz"
+                }
+            }
+        },
         "domain.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -727,6 +2069,41 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.Section": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.SectionCreate": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "purchase_planning_access"
+                }
+            }
+        },
+        "domain.SectionUpdate": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "status_and_calculation_access"
+                }
+            }
+        },
         "domain.SignIn": {
             "type": "object",
             "required": [
@@ -756,6 +2133,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
+                "name",
                 "password",
                 "phone",
                 "username"
@@ -790,6 +2168,11 @@ const docTemplate = `{
                 "language": {
                     "type": "string",
                     "example": "ru"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 140,
+                    "example": "Дмитрий"
                 },
                 "password": {
                     "type": "string",
@@ -862,6 +2245,10 @@ const docTemplate = `{
                 "comments": {
                     "description": "Комментарии",
                     "type": "string"
+                },
+                "company_id": {
+                    "description": "Уникальный идентификатор компании",
+                    "type": "integer"
                 },
                 "contact_person": {
                     "description": "Контактное лицо у поставщика",
@@ -973,12 +2360,331 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.UpdateSupplier": {
+            "type": "object",
+            "required": [
+                "actual_address",
+                "balance",
+                "bank_details",
+                "contact_person",
+                "contract_number",
+                "legal_address",
+                "name",
+                "phone",
+                "warehouse_address"
+            ],
+            "properties": {
+                "actual_address": {
+                    "description": "Фактический адрес поставщика",
+                    "type": "string",
+                    "example": "Фактический адрес поставщика"
+                },
+                "balance": {
+                    "description": "Баланс по поставщику",
+                    "type": "number",
+                    "example": 100
+                },
+                "bank_details": {
+                    "description": "Банковские реквизиты поставщика",
+                    "type": "string",
+                    "example": "Банковские реквизиты поставщика"
+                },
+                "comments": {
+                    "description": "Комментарии",
+                    "type": "string",
+                    "example": "Комментарии"
+                },
+                "contact_person": {
+                    "description": "Контактное лицо у поставщика",
+                    "type": "string",
+                    "maxLength": 140,
+                    "example": "Контактное лицо у поставщика"
+                },
+                "contract_number": {
+                    "description": "Номер и дата договора с поставщиком",
+                    "type": "string",
+                    "example": "Номер и дата договора с поставщиком"
+                },
+                "country": {
+                    "description": "Страна поставщика",
+                    "type": "string",
+                    "example": "Страна поставщика"
+                },
+                "email": {
+                    "description": "Электронная почта поставщика",
+                    "type": "string",
+                    "example": "Электронная почта поставщика"
+                },
+                "files": {
+                    "description": "Ссылки на файлы или документы",
+                    "type": "string",
+                    "example": "Ссылки на файлы или документы"
+                },
+                "is_active": {
+                    "description": "Статус активности поставщика (активен/неактивен)",
+                    "type": "boolean",
+                    "example": true
+                },
+                "legal_address": {
+                    "description": "Юридический адрес поставщика",
+                    "type": "string",
+                    "example": "Юридический адрес поставщика"
+                },
+                "name": {
+                    "description": "Наименование поставщика",
+                    "type": "string",
+                    "maxLength": 140,
+                    "minLength": 5,
+                    "example": "ООО Название поставщика"
+                },
+                "other_fields": {
+                    "description": "Дополнительные пользовательские поля",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "payment_terms": {
+                    "description": "Условия оплаты по контракту",
+                    "type": "string",
+                    "example": "Условия оплаты по контракту"
+                },
+                "phone": {
+                    "description": "Телефон поставщика",
+                    "type": "string",
+                    "minLength": 5,
+                    "example": "Телефон поставщика"
+                },
+                "product_categories": {
+                    "description": "Категории товаров, поставляемых поставщиком",
+                    "type": "string",
+                    "example": "Категории товаров, поставляемых поставщиком"
+                },
+                "product_types": {
+                    "description": "Количество типов товаров от поставщика",
+                    "type": "integer",
+                    "example": 100
+                },
+                "purchase_amount": {
+                    "description": "Общая сумма закупок у поставщика",
+                    "type": "number",
+                    "example": 100
+                },
+                "region": {
+                    "description": "Регион или штат поставщика",
+                    "type": "string",
+                    "example": "Регион или штат поставщика"
+                },
+                "registration_date": {
+                    "description": "Дата регистрации поставщика",
+                    "type": "string",
+                    "example": "2022-01-01T00:00:00Z"
+                },
+                "tax_id": {
+                    "description": "Идентификационный номер налогоплательщика (ИНН)",
+                    "type": "string",
+                    "example": "Идентификационный номер налогоплательщика (ИНН)"
+                },
+                "warehouse_address": {
+                    "description": "Адрес склада поставщика",
+                    "type": "string",
+                    "example": "Адрес склада поставщика"
+                },
+                "website": {
+                    "description": "Сайт поставщика",
+                    "type": "string",
+                    "example": "Сайт поставщика"
+                }
+            }
+        },
+        "domain.UserProfileUpdate": {
+            "type": "object",
+            "properties": {
+                "country": {
+                    "description": "Страна пользователя",
+                    "type": "string",
+                    "example": "RU"
+                },
+                "email": {
+                    "description": "Электронная почта пользователя, уникальная",
+                    "type": "string",
+                    "example": "a@a.aa"
+                },
+                "name": {
+                    "description": "Имя пользователя, уникальное",
+                    "type": "string",
+                    "example": "Иван"
+                },
+                "password_hash": {
+                    "description": "Хеш пароля пользователя",
+                    "type": "string",
+                    "example": "12345678"
+                },
+                "phone": {
+                    "description": "Телефон пользователя",
+                    "type": "string",
+                    "example": "+79000000000"
+                }
+            }
+        },
+        "domain.UserResponse": {
+            "type": "object",
+            "properties": {
+                "company_id": {
+                    "description": "Уникальный идентификатор компании",
+                    "type": "integer"
+                },
+                "country": {
+                    "description": "Страна пользователя",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "Дата и время создания учетной записи",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "Электронная почта пользователя, уникальная",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Уникальный идентификатор пользователя",
+                    "type": "integer"
+                },
+                "is_active": {
+                    "description": "Статус активности учетной записи",
+                    "type": "boolean"
+                },
+                "is_approved": {
+                    "description": "Подтвержден ли пользователь",
+                    "type": "boolean"
+                },
+                "is_send_system_notification": {
+                    "description": "Отправлять ли пользователю уведомления",
+                    "type": "boolean"
+                },
+                "language": {
+                    "description": "Язык пользователя",
+                    "type": "string"
+                },
+                "last_login": {
+                    "description": "Дата и время последнего входа",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Имя пользователя, уникальное",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "Телефон пользователя",
+                    "type": "string"
+                },
+                "position": {
+                    "description": "Должность пользователя",
+                    "type": "string"
+                },
+                "role": {
+                    "description": "Роль пользователя (например, 'user', 'admin')",
+                    "type": "string"
+                },
+                "sections": {
+                    "description": "Секции пользователя",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "updated_at": {
+                    "description": "Дата и время последнего обновления учетной записи",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "Имя пользователя, уникальное",
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UserUpdate": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "country": {
+                    "description": "Страна пользователя",
+                    "type": "string",
+                    "example": "Russia"
+                },
+                "email": {
+                    "description": "Электронная почта пользователя, уникальная",
+                    "type": "string",
+                    "example": "example@example.com"
+                },
+                "id": {
+                    "description": "Уникальный идентификатор пользователя",
+                    "type": "integer"
+                },
+                "is_active": {
+                    "description": "Статус активности учетной записи",
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_approved": {
+                    "description": "Подтвержден ли пользователь",
+                    "type": "boolean",
+                    "example": true
+                },
+                "is_send_system_notification": {
+                    "description": "Отправлять ли пользователю уведомления",
+                    "type": "boolean",
+                    "example": true
+                },
+                "language": {
+                    "description": "Язык пользователя",
+                    "type": "string",
+                    "example": "ru"
+                },
+                "name": {
+                    "description": "Имя пользователя, уникальное",
+                    "type": "string",
+                    "example": "Иван"
+                },
+                "password_hash": {
+                    "description": "Хеш пароля пользователя",
+                    "type": "string",
+                    "example": "admin"
+                },
+                "phone": {
+                    "description": "Телефон пользователя",
+                    "type": "string",
+                    "example": ""
+                },
+                "position": {
+                    "description": "Должность пользователя",
+                    "type": "string",
+                    "example": "manager"
+                },
+                "role": {
+                    "description": "Роль пользователя (например, 'user', 'admin')",
+                    "type": "string",
+                    "example": "admin"
+                },
+                "sections": {
+                    "description": "Секции пользователя",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "domain.Warehouse": {
             "type": "object",
             "properties": {
                 "address": {
                     "description": "Адрес склада",
                     "type": "string"
+                },
+                "company_id": {
+                    "description": "Уникальный идентификатор компании",
+                    "type": "integer"
                 },
                 "country": {
                     "description": "Страна склада",
@@ -1018,6 +2724,44 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "v1.response": {
+            "type": "object",
+            "properties": {
+                "allow_registration": {
+                    "type": "boolean"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "created_user_id": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "sections": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
@@ -1032,7 +2776,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "91.243.71.100:8080",
+	Host:             "localhost:8080",
 	BasePath:         "/api/web-api-gateway/v1",
 	Schemes:          []string{},
 	Title:            "Web api gateway API",

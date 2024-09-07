@@ -140,3 +140,13 @@ func IsAllowedRole(role string) bool {
 
 	return false
 }
+
+func RemoveFullAccessSection(slice []domain.Section, strToRemove string) []domain.Section {
+	var result []domain.Section
+	for _, str := range slice {
+		if str.Name != strToRemove {
+			result = append(result, str)
+		}
+	}
+	return result
+}

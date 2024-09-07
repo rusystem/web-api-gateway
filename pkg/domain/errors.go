@@ -17,7 +17,7 @@ var (
 	ErrWarehouseNotFound   = errors.New("warehouse doesn`t exists")
 	ErrSupplierNotFound    = errors.New("supplier doesn`t exists")
 
-	ErrUserAlreadyExists = errors.New("user with such username already exists")
+	ErrUserAlreadyExists = errors.New("user with such username or email already exists")
 
 	ErrGeneratePassword = errors.New("can`t to generate new password for user")
 	ErrGenerateUUID     = errors.New("can`t to generate uuid")
@@ -34,6 +34,7 @@ var (
 	ErrInvalidRefreshToken  = errors.New("invalid refresh token")
 	ErrRefreshTokenNotFound = errors.New("refresh token not found")
 	ErrExpiredRefreshToken  = errors.New("refresh token expired")
+	ErrInvalidTimezone      = errors.New("invalid timezone")
 
 	ErrCreateUser    = errors.New("can`t to create new user")
 	ErrCreateCompany = errors.New("can`t to create new company")

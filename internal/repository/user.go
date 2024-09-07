@@ -13,8 +13,6 @@ type User interface {
 	GetByUsername(ctx context.Context, username string) (domain.User, error)
 	GetSections(ctx context.Context, id int64) ([]string, error)
 	GetById(ctx context.Context, id int64) (domain.User, error)
-	Create(ctx context.Context, user domain.User) (int64, error)
-	Update(ctx context.Context, user domain.User) error
 	UpdateLastLogin(ctx context.Context, id int64) error
 }
 
@@ -42,14 +40,6 @@ func (ur *UserRepository) GetSections(ctx context.Context, id int64) ([]string, 
 
 func (ur *UserRepository) GetById(ctx context.Context, id int64) (domain.User, error) {
 	return ur.db.GetById(ctx, id)
-}
-
-func (ur *UserRepository) Create(ctx context.Context, user domain.User) (int64, error) {
-	return ur.db.Create(ctx, user)
-}
-
-func (ur *UserRepository) Update(ctx context.Context, user domain.User) error {
-	return ur.db.Update(ctx, user)
 }
 
 func (ur *UserRepository) UpdateLastLogin(ctx context.Context, id int64) error {

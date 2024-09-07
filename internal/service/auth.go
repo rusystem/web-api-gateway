@@ -9,6 +9,7 @@ import (
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/internal/repository"
 	"github.com/rusystem/web-api-gateway/pkg/auth"
+	"github.com/rusystem/web-api-gateway/pkg/client/grpc/accounts"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/rusystem/web-api-gateway/pkg/logger"
 	tools "github.com/rusystem/web-api-gateway/tool"
@@ -29,13 +30,15 @@ type AuthServices struct {
 	cfg          *config.Config
 	repo         *repository.Repository
 	tokenManager auth.TokenManager
+	userClient   *grpc.UserAccountsClient
 }
 
-func NewAuthServices(cfg *config.Config, repo *repository.Repository, tokenManager auth.TokenManager) *AuthServices {
+func NewAuthServices(cfg *config.Config, repo *repository.Repository, tokenManager auth.TokenManager, userClient *grpc.UserAccountsClient) *AuthServices {
 	return &AuthServices{
 		cfg:          cfg,
 		repo:         repo,
 		tokenManager: tokenManager,
+		userClient:   userClient,
 	}
 }
 
@@ -139,9 +142,10 @@ func (as *AuthServices) SignUp(c *gin.Context, input domain.SignUp, info domain.
 		return 0, false, domain.ErrSectionsNotAllowed
 	}
 
-	id, err := as.repo.User.Create(c.Request.Context(), domain.User{
+	id, err := as.userClient.Create(c.Request.Context(), domain.User{
 		CompanyID:                input.CompanyId,
 		Username:                 input.Username,
+		Name:                     input.Name,
 		Email:                    input.Email,
 		Phone:                    input.Phone,
 		PasswordHash:             string(hashedPass),
@@ -185,10 +189,16 @@ func (as *AuthServices) RefreshTokens(c *gin.Context, refreshToken string) (doma
 		return domain.TokenResponse{}, domain.ErrInvalidRefreshToken
 	}
 
+	sections, err := as.repo.User.GetSections(c.Request.Context(), session.UserID)
+	if err != nil {
+		return domain.TokenResponse{}, domain.ErrRefreshToken
+	}
+
 	resp, err := as.createSession(c, domain.User{
 		ID:        session.UserID,
 		Role:      session.Role,
 		CompanyID: session.CompanyID,
+		Sections:  sections,
 	})
 	if err != nil {
 		return domain.TokenResponse{}, domain.ErrRefreshToken
@@ -225,6 +235,7 @@ func (as *AuthServices) createSession(ctx *gin.Context, user domain.User) (domai
 			Role:        user.Role,
 			CompanyId:   user.CompanyID,
 			Fingerprint: fingerprint,
+			Sections:    user.Sections,
 		}, as.cfg.Auth.AccessTokenTTL)
 	if err != nil {
 		return domain.TokenResponse{}, err

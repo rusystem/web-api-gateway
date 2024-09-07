@@ -27,8 +27,15 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 	v1 := api.Group("/v1")
 	{
 		h.initAuthRoutes(v1)
+
+		// warehouse routes
 		h.initSupplierRoutes(v1)
 		h.initWarehouseRoutes(v1)
+
+		// accounts routes
+		h.initCompanyRoutes(v1)
+		h.initUserRoutes(v1)
+		h.initSectionRoutes(v1)
 	}
 }
 
@@ -62,7 +69,7 @@ func parseTakeQueryParam(c *gin.Context) (int, error) {
 	return take, nil
 }
 
-func parseIdIntPathParam(c *gin.Context) (int, error) {
+func parseIdIntPathParam(c *gin.Context) (int64, error) {
 	idParam := c.Param("id")
 	if idParam == "" {
 		return 0, domain.ErrInvalidIdParam
@@ -73,7 +80,7 @@ func parseIdIntPathParam(c *gin.Context) (int, error) {
 		return 0, domain.ErrInvalidIdParam
 	}
 
-	return id, nil
+	return int64(id), nil
 }
 
 func parseIdStringPathParam(c *gin.Context) (string, error) {

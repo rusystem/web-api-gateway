@@ -1,4 +1,4 @@
-package grpc
+package warehouse
 
 import (
 	"context"
@@ -7,8 +7,6 @@ import (
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/rusystem/web-api-gateway/proto/crm_warehouse/warehouse"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type WarehouseClient struct {
@@ -41,10 +39,9 @@ func (w *WarehouseClient) GetById(ctx context.Context, id int64) (domain.Warehou
 		return domain.Warehouse{}, errors.New("calls grpc: id can`t be zero")
 	}
 
-	resp, err := w.warehouseClient.GetById(ctx, &warehouse.Id{Id: id})
+	resp, err := w.warehouseClient.GetById(ctx, &warehouse.WarehouseId{Id: id})
 	if err != nil {
-		st, ok := status.FromError(err)
-		if ok && st.Code() == codes.NotFound {
+		if err.Error() == "rpc error: code = Unknown desc = sql: no rows in result set" {
 			return domain.Warehouse{}, domain.ErrWarehouseNotFound
 		}
 
@@ -67,6 +64,7 @@ func (w *WarehouseClient) GetById(ctx context.Context, id int64) (domain.Warehou
 		CurrentOccupancy:  resp.CurrentOccupancy,
 		OtherFields:       otherFields,
 		Country:           resp.Country,
+		CompanyId:         resp.CompanyId,
 	}, nil
 }
 
@@ -87,10 +85,73 @@ func (w *WarehouseClient) Create(ctx context.Context, wh domain.Warehouse) (int6
 		CurrentOccupancy:  wh.CurrentOccupancy,
 		OtherFields:       string(otherFieldsJSON),
 		Country:           wh.Country,
+		CompanyId:         wh.CompanyId,
 	})
 	if err != nil {
 		return 0, err
 	}
 
 	return resp.Id, nil
+}
+
+func (w *WarehouseClient) Update(ctx context.Context, wh domain.Warehouse) error {
+	otherFieldsJSON, err := json.Marshal(wh.OtherFields)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.warehouseClient.Update(ctx, &warehouse.Warehouse{
+		Id:                wh.ID,
+		Name:              wh.Name,
+		Address:           wh.Address,
+		ResponsiblePerson: wh.ResponsiblePerson,
+		Phone:             wh.Phone,
+		Email:             wh.Email,
+		MaxCapacity:       wh.MaxCapacity,
+		CurrentOccupancy:  wh.CurrentOccupancy,
+		OtherFields:       string(otherFieldsJSON),
+		Country:           wh.Country,
+		CompanyId:         wh.CompanyId,
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (w *WarehouseClient) Delete(ctx context.Context, id int64) error {
+	_, err := w.warehouseClient.Delete(ctx, &warehouse.WarehouseId{Id: id})
+	return err
+}
+
+func (w *WarehouseClient) GetList(ctx context.Context, companyId int64) ([]domain.Warehouse, error) {
+	var warehouses []domain.Warehouse
+	resp, err := w.warehouseClient.GetList(ctx, &warehouse.WarehouseCompanyId{Id: companyId})
+	if err != nil {
+		return warehouses, err
+	}
+
+	for _, wh := range resp.Warehouses {
+		var otherFields map[string]interface{}
+		if err = json.Unmarshal([]byte(wh.OtherFields), &otherFields); err != nil {
+			return warehouses, err
+		}
+
+		warehouses = append(warehouses, domain.Warehouse{
+			ID:                wh.Id,
+			Name:              wh.Name,
+			Address:           wh.Address,
+			ResponsiblePerson: wh.ResponsiblePerson,
+			Phone:             wh.Phone,
+			Email:             wh.Email,
+			MaxCapacity:       wh.MaxCapacity,
+			CurrentOccupancy:  wh.CurrentOccupancy,
+			OtherFields:       otherFields,
+			Country:           wh.Country,
+			CompanyId:         wh.CompanyId,
+		})
+	}
+
+	return warehouses, nil
 }

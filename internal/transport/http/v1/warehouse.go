@@ -8,10 +8,12 @@ import (
 )
 
 func (h *Handler) initWarehouseRoutes(api *gin.RouterGroup) {
-	wh := api.Group("/warehouse", h.userIdentity)
+	wh := api.Group("/warehouse")
 	{
-		wh.GET("/:id", h.getWarehouse)
-		wh.POST("/", h.createWarehouse)
+		wh.GET("/:id", h.userIdentity, h.getWarehouse)
+
+		// only admin can create, update, delete warehouse
+		wh.POST("/", h.adminIdentity, h.createWarehouse)
 	}
 }
 
@@ -26,7 +28,7 @@ func (h *Handler) initWarehouseRoutes(api *gin.RouterGroup) {
 // @Success 200 {object} domain.Warehouse
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
-// @Failure default {object} domain.ErrorResponse
+// @Failure default {object} response
 // @Router /warehouse/{id} [GET]
 func (h *Handler) getWarehouse(c *gin.Context) {
 	id, err := parseIdIntPathParam(c)
@@ -35,7 +37,7 @@ func (h *Handler) getWarehouse(c *gin.Context) {
 		return
 	}
 
-	wh, err := h.services.Warehouse.GetById(c, int64(id))
+	wh, err := h.services.Warehouse.GetById(c, id)
 	if err != nil {
 		if errors.Is(err, domain.ErrWarehouseNotFound) {
 			newResponse(c, http.StatusNotFound, err.Error())
@@ -69,7 +71,7 @@ func (h *Handler) createWarehouse(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.Warehouse.Create(c, inp)
+	id, err := h.services.Warehouse.Create(c, inp) //todo добавить привязку склада к компании
 	if err != nil {
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return

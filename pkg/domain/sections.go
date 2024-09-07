@@ -10,12 +10,15 @@ const (
 	PurchasePlanningAccessSection   = "purchase_planning_access"    // Снабженец. Доступ к заявкам на закуп и планированию закупок.
 )
 
-func IsFullAccessSection(sections []string) bool {
-	for _, s := range sections {
-		if s == FullAllAccessSection {
-			return true
-		}
-	}
+type Section struct {
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
+}
 
-	return false
+type SectionCreate struct {
+	Name string `json:"name" binding:"required" example:"purchase_planning_access"`
+}
+
+type SectionUpdate struct {
+	Name string `json:"name" binding:"required" example:"status_and_calculation_access"`
 }

@@ -30,8 +30,8 @@ func (cdr *CompanyDatabaseRepository) GetById(ctx context.Context, id int64) (do
 	var company domain.Company
 	err := cdr.db.QueryRowContext(ctx, query, id).Scan(
 		&company.ID,
-		&company.NameRU,
-		&company.NameEN,
+		&company.NameRu,
+		&company.NameEn,
 		&company.Country,
 		&company.Address,
 		&company.Phone,

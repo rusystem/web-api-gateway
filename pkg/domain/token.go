@@ -7,6 +7,7 @@ type JWTInfo struct {
 	CompanyId   int64
 	Role        string
 	Fingerprint string
+	Sections    []string
 }
 
 type RefreshSession struct {

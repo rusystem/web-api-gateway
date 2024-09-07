@@ -1,5 +1,95 @@
 basePath: /api/web-api-gateway/v1
 definitions:
+  domain.Company:
+    properties:
+      address:
+        type: string
+      country:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      is_approved:
+        type: boolean
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      phone:
+        type: string
+      timezone:
+        type: string
+      updated_at:
+        type: string
+      website:
+        type: string
+    type: object
+  domain.CompanyUpdate:
+    properties:
+      address:
+        type: string
+      country:
+        type: string
+      email:
+        type: string
+      is_active:
+        type: boolean
+      is_approved:
+        type: boolean
+      name_en:
+        type: string
+      name_ru:
+        type: string
+      phone:
+        type: string
+      timezone:
+        type: string
+      website:
+        type: string
+    type: object
+  domain.CreateCompany:
+    properties:
+      address:
+        example: г. Алматы
+        type: string
+      country:
+        example: KZ
+        type: string
+      email:
+        example: example@example.com
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      is_approved:
+        example: true
+        type: boolean
+      name_en:
+        example: OOO ROGA I COPUTA
+        type: string
+      name_ru:
+        example: ООО Рога и копыта
+        type: string
+      phone:
+        example: "+77777777777"
+        type: string
+      timezone:
+        example: Asia/Almaty
+        type: string
+      website:
+        example: www.rogakopyta.kz
+        type: string
+    required:
+    - address
+    - email
+    - name_ru
+    - phone
+    type: object
   domain.ErrorResponse:
     properties:
       message:
@@ -174,6 +264,29 @@ definitions:
       message:
         type: string
     type: object
+  domain.Section:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.SectionCreate:
+    properties:
+      name:
+        example: purchase_planning_access
+        type: string
+    required:
+    - name
+    type: object
+  domain.SectionUpdate:
+    properties:
+      name:
+        example: status_and_calculation_access
+        type: string
+    required:
+    - name
+    type: object
   domain.SignIn:
     properties:
       company_id:
@@ -218,6 +331,10 @@ definitions:
       language:
         example: ru
         type: string
+      name:
+        example: Дмитрий
+        maxLength: 140
+        type: string
       password:
         example: "12345678"
         maxLength: 255
@@ -248,6 +365,7 @@ definitions:
         type: string
     required:
     - email
+    - name
     - password
     - phone
     - username
@@ -273,6 +391,9 @@ definitions:
       comments:
         description: Комментарии
         type: string
+      company_id:
+        description: Уникальный идентификатор компании
+        type: integer
       contact_person:
         description: Контактное лицо у поставщика
         type: string
@@ -356,11 +477,259 @@ definitions:
     required:
     - refresh_token
     type: object
+  domain.UpdateSupplier:
+    properties:
+      actual_address:
+        description: Фактический адрес поставщика
+        example: Фактический адрес поставщика
+        type: string
+      balance:
+        description: Баланс по поставщику
+        example: 100
+        type: number
+      bank_details:
+        description: Банковские реквизиты поставщика
+        example: Банковские реквизиты поставщика
+        type: string
+      comments:
+        description: Комментарии
+        example: Комментарии
+        type: string
+      contact_person:
+        description: Контактное лицо у поставщика
+        example: Контактное лицо у поставщика
+        maxLength: 140
+        type: string
+      contract_number:
+        description: Номер и дата договора с поставщиком
+        example: Номер и дата договора с поставщиком
+        type: string
+      country:
+        description: Страна поставщика
+        example: Страна поставщика
+        type: string
+      email:
+        description: Электронная почта поставщика
+        example: Электронная почта поставщика
+        type: string
+      files:
+        description: Ссылки на файлы или документы
+        example: Ссылки на файлы или документы
+        type: string
+      is_active:
+        description: Статус активности поставщика (активен/неактивен)
+        example: true
+        type: boolean
+      legal_address:
+        description: Юридический адрес поставщика
+        example: Юридический адрес поставщика
+        type: string
+      name:
+        description: Наименование поставщика
+        example: ООО Название поставщика
+        maxLength: 140
+        minLength: 5
+        type: string
+      other_fields:
+        additionalProperties: true
+        description: Дополнительные пользовательские поля
+        type: object
+      payment_terms:
+        description: Условия оплаты по контракту
+        example: Условия оплаты по контракту
+        type: string
+      phone:
+        description: Телефон поставщика
+        example: Телефон поставщика
+        minLength: 5
+        type: string
+      product_categories:
+        description: Категории товаров, поставляемых поставщиком
+        example: Категории товаров, поставляемых поставщиком
+        type: string
+      product_types:
+        description: Количество типов товаров от поставщика
+        example: 100
+        type: integer
+      purchase_amount:
+        description: Общая сумма закупок у поставщика
+        example: 100
+        type: number
+      region:
+        description: Регион или штат поставщика
+        example: Регион или штат поставщика
+        type: string
+      registration_date:
+        description: Дата регистрации поставщика
+        example: "2022-01-01T00:00:00Z"
+        type: string
+      tax_id:
+        description: Идентификационный номер налогоплательщика (ИНН)
+        example: Идентификационный номер налогоплательщика (ИНН)
+        type: string
+      warehouse_address:
+        description: Адрес склада поставщика
+        example: Адрес склада поставщика
+        type: string
+      website:
+        description: Сайт поставщика
+        example: Сайт поставщика
+        type: string
+    required:
+    - actual_address
+    - balance
+    - bank_details
+    - contact_person
+    - contract_number
+    - legal_address
+    - name
+    - phone
+    - warehouse_address
+    type: object
+  domain.UserProfileUpdate:
+    properties:
+      country:
+        description: Страна пользователя
+        example: RU
+        type: string
+      email:
+        description: Электронная почта пользователя, уникальная
+        example: a@a.aa
+        type: string
+      name:
+        description: Имя пользователя, уникальное
+        example: Иван
+        type: string
+      password_hash:
+        description: Хеш пароля пользователя
+        example: "12345678"
+        type: string
+      phone:
+        description: Телефон пользователя
+        example: "+79000000000"
+        type: string
+    type: object
+  domain.UserResponse:
+    properties:
+      company_id:
+        description: Уникальный идентификатор компании
+        type: integer
+      country:
+        description: Страна пользователя
+        type: string
+      created_at:
+        description: Дата и время создания учетной записи
+        type: string
+      email:
+        description: Электронная почта пользователя, уникальная
+        type: string
+      id:
+        description: Уникальный идентификатор пользователя
+        type: integer
+      is_active:
+        description: Статус активности учетной записи
+        type: boolean
+      is_approved:
+        description: Подтвержден ли пользователь
+        type: boolean
+      is_send_system_notification:
+        description: Отправлять ли пользователю уведомления
+        type: boolean
+      language:
+        description: Язык пользователя
+        type: string
+      last_login:
+        description: Дата и время последнего входа
+        type: string
+      name:
+        description: Имя пользователя, уникальное
+        type: string
+      phone:
+        description: Телефон пользователя
+        type: string
+      position:
+        description: Должность пользователя
+        type: string
+      role:
+        description: Роль пользователя (например, 'user', 'admin')
+        type: string
+      sections:
+        description: Секции пользователя
+        items:
+          type: string
+        type: array
+      updated_at:
+        description: Дата и время последнего обновления учетной записи
+        type: string
+      username:
+        description: Имя пользователя, уникальное
+        type: string
+    type: object
+  domain.UserUpdate:
+    properties:
+      country:
+        description: Страна пользователя
+        example: Russia
+        type: string
+      email:
+        description: Электронная почта пользователя, уникальная
+        example: example@example.com
+        type: string
+      id:
+        description: Уникальный идентификатор пользователя
+        type: integer
+      is_active:
+        description: Статус активности учетной записи
+        example: true
+        type: boolean
+      is_approved:
+        description: Подтвержден ли пользователь
+        example: true
+        type: boolean
+      is_send_system_notification:
+        description: Отправлять ли пользователю уведомления
+        example: true
+        type: boolean
+      language:
+        description: Язык пользователя
+        example: ru
+        type: string
+      name:
+        description: Имя пользователя, уникальное
+        example: Иван
+        type: string
+      password_hash:
+        description: Хеш пароля пользователя
+        example: admin
+        type: string
+      phone:
+        description: Телефон пользователя
+        example: ""
+        type: string
+      position:
+        description: Должность пользователя
+        example: manager
+        type: string
+      role:
+        description: Роль пользователя (например, 'user', 'admin')
+        example: admin
+        type: string
+      sections:
+        description: Секции пользователя
+        items:
+          type: string
+        type: array
+    required:
+    - id
+    type: object
   domain.Warehouse:
     properties:
       address:
         description: Адрес склада
         type: string
+      company_id:
+        description: Уникальный идентификатор компании
+        type: integer
       country:
         description: Страна склада
         type: string
@@ -390,7 +759,32 @@ definitions:
         description: Ответственное лицо за склад
         type: string
     type: object
-host: 91.243.71.100:8080
+  v1.response:
+    properties:
+      allow_registration:
+        type: boolean
+      avatar:
+        type: string
+      created_user_id:
+        type: string
+      id:
+        type: string
+      is_admin:
+        type: boolean
+      message:
+        type: string
+      name:
+        type: string
+      sections:
+        items:
+          type: string
+        type: array
+      status:
+        type: string
+      token:
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact:
     email: ru.system.ru@gmail.com
@@ -403,8 +797,9 @@ paths:
     post:
       consumes:
       - application/json
-      description: Аутентификация пользователя.\nТолько у super admin есть возможность
-        авторизоваться под определенной компанией.
+      description: |-
+        Аутентификация пользователя.
+        Только у super admin есть возможность авторизоваться под определенной компанией.
       operationId: sign-in
       parameters:
       - description: Необходимо указать данные для аутентификации пользователя.
@@ -512,13 +907,261 @@ paths:
       summary: Refresh tokens
       tags:
       - auth
+  /company/:
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Получение информации по всем компаниям.
+        Только super admin может получать информацию.
+      operationId: get-companies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Company'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get companies
+      tags:
+      - company
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Создание компании.
+        Только super admin может создавать компании
+      operationId: create-company
+      parameters:
+      - description: Company info
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateCompany'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create company
+      tags:
+      - company
+  /company/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: |-
+        Удаление компании.
+        Только super admin может удалять компании.
+      operationId: delete-company
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete company
+      tags:
+      - company
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Получение информации о компании по ID.
+        Только super admin может получать информацию по id компании.
+      operationId: get-company
+      parameters:
+      - description: Company ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get company
+      tags:
+      - company
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Обновление компании.
+        Только super admin может обновлять active & approve компании
+        Для обновления указывать только необходимые поля.
+      operationId: update-company
+      parameters:
+      - description: Company ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Company info
+        in: body
+        name: company
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CompanyUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update company
+      tags:
+      - company
+  /company/info:
+    get:
+      consumes:
+      - application/json
+      description: Получение информации о компании для пользователя
+      operationId: get-company-info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get company info
+      tags:
+      - company
   /register:
     post:
       consumes:
       - application/json
-      description: Регистрация нового пользователя.\nТолько у super admin есть возможность
-        добавлять пользователя в другие компании.\nТолько у super admin есть возможность
-        давать роль admin пользователю
+      description: |-
+        Регистрация нового пользователя.
+        Только у super admin есть возможность добавлять пользователя в другие компании.
+        Только у super admin есть возможность давать роль admin пользователю
       operationId: sign-up
       parameters:
       - description: Необходимо указать данные для регистрации нового пользователя.
@@ -555,7 +1198,243 @@ paths:
       summary: Sign up
       tags:
       - auth
+  /sections:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка секций
+      operationId: get-sections
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Section'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get sections
+      tags:
+      - sections
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Создание секции
+        Только super admin может создавать секции
+      operationId: create-section
+      parameters:
+      - description: Section
+        in: body
+        name: section
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SectionCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: int
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create section
+      tags:
+      - sections
+  /sections/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление секции
+      operationId: delete-section
+      parameters:
+      - description: Section ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete section
+      tags:
+      - sections
+    get:
+      consumes:
+      - application/json
+      description: Получение секции по id
+      operationId: get-section
+      parameters:
+      - description: Section ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Section'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get section
+      tags:
+      - sections
+    put:
+      consumes:
+      - application/json
+      description: Обновление секции
+      operationId: update-section
+      parameters:
+      - description: Section ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Section
+        in: body
+        name: section
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SectionUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update section
+      tags:
+      - sections
   /supplier:
+    get:
+      consumes:
+      - application/json
+      description: Получение всех поставщиков компании
+      operationId: get-suppliers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Supplier'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get suppliers
+      tags:
+      - supplier
     post:
       consumes:
       - application/json
@@ -597,6 +1476,43 @@ paths:
       tags:
       - supplier
   /supplier/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление поставщика своей компании
+      operationId: delete-supplier
+      parameters:
+      - description: ID поставщика
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete supplier
+      tags:
+      - supplier
     get:
       consumes:
       - application/json
@@ -636,6 +1552,298 @@ paths:
       summary: Get supplier by id
       tags:
       - supplier
+    put:
+      consumes:
+      - application/json
+      description: Обновление поставщика
+      operationId: update-supplier
+      parameters:
+      - description: ID поставщика
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Необходимо указать данные поставщика.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateSupplier'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update supplier
+      tags:
+      - supplier
+  /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: |-
+        Удаление пользователя по id.
+        Только super admin может удалить пользователя по id.
+        Только admin может удалить пользователя в рамках своей компании.
+      operationId: delete-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete user
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: |-
+        Получение информации о пользователе по id.
+        Только super admin может получать информацию по id пользователя.
+      operationId: get-user
+      parameters:
+      - description: User ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Обновление информации о пользователе по id.
+        Необходимо передавать только измененные данные.
+        Только super admin может обновлять информацию по любому id пользователя.
+        Только admin может обновлять информацию по id пользователя в рамках своей компании.
+        Только super admin может менять role для пользователя
+      operationId: update-user
+      parameters:
+      - description: User ID
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user
+      tags:
+      - user
+  /user/company:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка пользователей компании.
+      operationId: get-users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.UserResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get users
+      tags:
+      - user
+  /user/info:
+    get:
+      consumes:
+      - application/json
+      description: Получение информации о пользователе.
+      operationId: get-user-info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user info
+      tags:
+      - user
+  /user/profile:
+    put:
+      consumes:
+      - application/json
+      description: |-
+        Обновление информации о пользователе.
+        Необходимо передавать только измененные данные.
+      operationId: update-user-profile
+      parameters:
+      - description: user id
+        example: 1
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UserProfileUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user profile
+      tags:
+      - user
   /warehouse:
     post:
       consumes:
@@ -711,7 +1919,7 @@ paths:
         default:
           description: ""
           schema:
-            $ref: '#/definitions/domain.ErrorResponse'
+            $ref: '#/definitions/v1.response'
       security:
       - ApiKeyAuth: []
       summary: Get warehouse by id

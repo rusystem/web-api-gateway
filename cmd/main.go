@@ -12,7 +12,8 @@ import (
 	"github.com/rusystem/web-api-gateway/internal/service"
 	http_handler "github.com/rusystem/web-api-gateway/internal/transport/http"
 	"github.com/rusystem/web-api-gateway/pkg/auth"
-	"github.com/rusystem/web-api-gateway/pkg/client/grpc"
+	grpc "github.com/rusystem/web-api-gateway/pkg/client/grpc/accounts"
+	"github.com/rusystem/web-api-gateway/pkg/client/grpc/warehouse"
 	"github.com/rusystem/web-api-gateway/pkg/database"
 	"github.com/rusystem/web-api-gateway/pkg/logger"
 	"net/http"
@@ -34,13 +35,15 @@ func init() {
 // @contact.name ru.system.ru@gmail.com
 // @contact.email ru.system.ru@gmail.com
 
-// @host 91.243.71.100:8080
+// @host localhost:8080
 // @BasePath /api/web-api-gateway/v1
 
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
 func main() {
+	// 91.243.71.100:8080
+
 	// init configs
 	cfg, err := config.New(false)
 	if err != nil {
@@ -75,29 +78,72 @@ func main() {
 	}(pc)
 
 	// init grpc supplier client
-	splClient, err := grpc.NewSuppliersClient(cfg.Url.Warehouse)
+	splClient, err := warehouse.NewSuppliersClient(cfg.Url.Warehouse)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("can`t connect to chat grpc service, err - %v\n", err))
 	}
-	defer func(splClient *grpc.SuppliersClient) {
+	defer func(splClient *warehouse.SuppliersClient) {
 		if err = splClient.Close(); err != nil {
 			logger.Error(fmt.Sprintf("the error occurred while closing supplier grpc connection, err - %v", err))
 		}
 	}(splClient)
 
-	whClient, err := grpc.NewWarehouseClient(cfg.Url.Warehouse)
+	// init grpc warehouse client
+	whClient, err := warehouse.NewWarehouseClient(cfg.Url.Warehouse)
 	if err != nil {
 		logger.Fatal(fmt.Sprintf("can`t connect to chat grpc service, err - %v\n", err))
 	}
-	defer func(whClient *grpc.WarehouseClient) {
+	defer func(whClient *warehouse.WarehouseClient) {
 		if err = whClient.Close(); err != nil {
 			logger.Error(fmt.Sprintf("the error occurred while closing warehouse grpc connection, err - %v", err))
 		}
 	}(whClient)
 
+	// init grpc company accounts client
+	compClient, err := grpc.NewCompanyAccountsClient(cfg.Url.Accounts)
+	if err != nil {
+		logger.Fatal(fmt.Sprintf("can`t connect to accounts grpc service, err - %v\n", err))
+	}
+	defer func(cc *grpc.CompanyAccountsClient) {
+		if err = cc.Close(); err != nil {
+			logger.Error(fmt.Sprintf("the error occurred while closing accounts grpc connection, err - %v", err))
+		}
+	}(compClient)
+
+	// init grpc user accounts client
+	userClient, err := grpc.NewUserAccountsClient(cfg.Url.Accounts)
+	if err != nil {
+		logger.Fatal(fmt.Sprintf("can`t connect to accounts grpc service, err - %v\n", err))
+	}
+	defer func(uc *grpc.UserAccountsClient) {
+		if err = uc.Close(); err != nil {
+			logger.Error(fmt.Sprintf("the error occurred while closing accounts grpc connection, err - %v", err))
+		}
+	}(userClient)
+
+	// init grpc sections accounts client
+	sectionClient, err := grpc.NewSectionsAccountsClient(cfg.Url.Accounts)
+	if err != nil {
+		logger.Fatal(fmt.Sprintf("can`t connect to accounts grpc service, err - %v\n", err))
+	}
+	defer func(sc *grpc.SectionsAccountsClient) {
+		if err = sc.Close(); err != nil {
+			logger.Error(fmt.Sprintf("the error occurred while closing accounts grpc connection, err - %v", err))
+		}
+	}(sectionClient)
+
 	// init dep-s
 	repo := repository.New(cfg, memCache, pc)
-	srv := service.New(cfg, repo, tokenManager, splClient, whClient)
+	srv := service.New(service.Config{
+		Config:          cfg,
+		Repo:            repo,
+		TokenManager:    tokenManager,
+		SuppliersClient: splClient,
+		WarehouseClient: whClient,
+		CompanyClient:   compClient,
+		UserClient:      userClient,
+		SectionsClient:  sectionClient,
+	})
 	hh := http_handler.NewHandler(srv, tokenManager, cfg)
 
 	// HTTP Server

@@ -30,13 +30,16 @@ func NewManager(signingKey string) (*Manager, error) {
 }
 
 func (m *Manager) NewJWT(info domain.JWTInfo, ttl time.Duration) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().UTC().Add(ttl).Unix(),
-		Id:        strconv.Itoa(int(info.UserId)),
-		Audience:  info.Role,
-		Subject:   strconv.Itoa(int(info.CompanyId)),
-		Issuer:    info.Fingerprint,
-	})
+	claims := jwt.MapClaims{
+		"exp":      time.Now().UTC().Add(ttl).Unix(),
+		"jti":      strconv.Itoa(int(info.UserId)),
+		"aud":      info.Role,
+		"sub":      strconv.Itoa(int(info.CompanyId)),
+		"iss":      info.Fingerprint,
+		"sections": info.Sections,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	return token.SignedString([]byte(m.signingKey))
 }
@@ -58,14 +61,41 @@ func (m *Manager) Parse(accessToken string) (domain.JWTInfo, error) {
 		return domain.JWTInfo{}, fmt.Errorf("error get user claims from token")
 	}
 
-	info := domain.JWTInfo{
-		UserId:      claims["jti"].(int64),
-		Role:        claims["aud"].(string),
-		CompanyId:   claims["sub"].(int64),
-		Fingerprint: claims["iss"].(string),
+	// Инициализируем секции как пустой срез
+	var sections []string
+	if sectionsClaim, ok := claims["sections"]; ok {
+		// Проверяем, что это срез интерфейсов (как это хранится в JWT) и преобразуем в срез строк
+		if sectionsSlice, ok := sectionsClaim.([]interface{}); ok {
+			for _, section := range sectionsSlice {
+				if str, ok := section.(string); ok {
+					sections = append(sections, str)
+				}
+			}
+		} else {
+			return domain.JWTInfo{}, fmt.Errorf("error parsing sections from token")
+		}
 	}
 
-	return info, nil
+	userId := claims["jti"].(string)
+	companyId := claims["sub"].(string)
+
+	userIdInt, err := strconv.Atoi(userId)
+	if err != nil {
+		return domain.JWTInfo{}, fmt.Errorf("error parsing userId from token")
+	}
+
+	companyIdInt, err := strconv.Atoi(companyId)
+	if err != nil {
+		return domain.JWTInfo{}, fmt.Errorf("error parsing companyId from token")
+	}
+
+	return domain.JWTInfo{
+		UserId:      int64(userIdInt),
+		Role:        claims["aud"].(string),
+		CompanyId:   int64(companyIdInt),
+		Fingerprint: claims["iss"].(string),
+		Sections:    sections,
+	}, nil
 }
 
 func (m *Manager) NewRefreshToken() (string, error) {

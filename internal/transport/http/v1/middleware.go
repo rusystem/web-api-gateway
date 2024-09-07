@@ -39,6 +39,26 @@ func (h *Handler) adminIdentity(c *gin.Context) {
 	c.Set(userInfoCtx, info)
 }
 
+func (h *Handler) superAdminIdentity(c *gin.Context) {
+	info, err := h.parseAuthHeader(c)
+	if err != nil {
+		newResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	if info.Role != domain.AdminRole {
+		newResponse(c, http.StatusForbidden, "access denied")
+		return
+	}
+
+	if !tools.IsFullAccessSection(info.Sections) {
+		newResponse(c, http.StatusForbidden, "access denied")
+		return
+	}
+
+	c.Set(userInfoCtx, info)
+}
+
 func (h *Handler) parseAuthHeader(c *gin.Context) (domain.JWTInfo, error) {
 	header := c.GetHeader(authorizationHeader)
 	if header == "" {

@@ -39,6 +39,7 @@ type Postgres struct {
 
 type Url struct {
 	Warehouse string
+	Accounts  string
 }
 
 type Limiter struct {

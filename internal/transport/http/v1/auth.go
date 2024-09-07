@@ -28,7 +28,8 @@ func (h *Handler) initAuthRoutes(api *gin.RouterGroup) {
 
 // @Summary Sign in
 // @Tags auth
-// @Description Аутентификация пользователя.\nТолько у super admin есть возможность авторизоваться под определенной компанией.
+// @Description Аутентификация пользователя.
+// @Description Только у super admin есть возможность авторизоваться под определенной компанией.
 // @ID sign-in
 // @Accept json
 // @Produce json
@@ -113,7 +114,9 @@ func (h *Handler) refresh(c *gin.Context) {
 // @Summary Sign up
 // @Security ApiKeyAuth
 // @Tags auth
-// @Description Регистрация нового пользователя.\nТолько у super admin есть возможность добавлять пользователя в другие компании.\nТолько у super admin есть возможность давать роль admin пользователю
+// @Description Регистрация нового пользователя.
+// @Description Только у super admin есть возможность добавлять пользователя в другие компании.
+// @Description Только у super admin есть возможность давать роль admin пользователю
 // @ID sign-up
 // @Accept json
 // @Produce json
