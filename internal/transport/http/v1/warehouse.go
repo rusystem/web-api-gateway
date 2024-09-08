@@ -11,9 +11,12 @@ func (h *Handler) initWarehouseRoutes(api *gin.RouterGroup) {
 	wh := api.Group("/warehouse")
 	{
 		wh.GET("/:id", h.userIdentity, h.getWarehouse)
+		wh.GET("/", h.userIdentity, h.getWarehouses)
 
 		// only admin can create, update, delete warehouse
 		wh.POST("/", h.adminIdentity, h.createWarehouse)
+		wh.PUT("/:id", h.adminIdentity, h.updateWarehouse)
+		wh.DELETE("/:id", h.adminIdentity, h.deleteWarehouse)
 	}
 }
 
@@ -51,6 +54,34 @@ func (h *Handler) getWarehouse(c *gin.Context) {
 	c.JSON(http.StatusOK, wh)
 }
 
+// @Summary Get warehouses
+// @Security ApiKeyAuth
+// @Tags warehouse
+// @Description Получение списка складов
+// @ID get-warehouses
+// @Accept json
+// @Produce json
+// @Success 200 {array} domain.Warehouse
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} response
+// @Router /warehouse [GET]
+func (h *Handler) getWarehouses(c *gin.Context) {
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	whs, err := h.services.Warehouse.GetListByCompanyId(c, info.CompanyId)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, whs)
+}
+
 // @Summary Create warehouse
 // @Security ApiKeyAuth
 // @Tags warehouse
@@ -78,4 +109,91 @@ func (h *Handler) createWarehouse(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, domain.IdResponse{ID: id})
+}
+
+// @Summary Update warehouse
+// @Security ApiKeyAuth
+// @Tags warehouse
+// @Description Обновление склада своей компании
+// @ID update-warehouse
+// @Accept json
+// @Produce json
+// @Param id path int true "Warehouse ID"
+// @Param input body domain.InputWarehouse true "Необходимо указать данные склада."
+// @Success 200
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /warehouse/{id} [PUT]
+func (h *Handler) updateWarehouse(c *gin.Context) {
+	id, err := parseIdIntPathParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var inp domain.WarehouseUpdate
+	if err := c.ShouldBindJSON(&inp); err != nil {
+		newResponse(c, http.StatusBadRequest, domain.ErrInvalidInputBody.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	inp.ID = id
+
+	if err := h.services.Warehouse.Update(c, inp, info); err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+// @Summary Delete warehouse
+// @Security ApiKeyAuth
+// @Tags warehouse
+// @Description Удаление склада своей компании
+// @ID delete-warehouse
+// @Accept json
+// @Produce json
+// @Param id path int true "Warehouse ID"
+// @Success 200
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /warehouse/{id} [DELETE]
+func (h *Handler) deleteWarehouse(c *gin.Context) {
+	id, err := parseIdIntPathParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if err = h.services.Warehouse.Delete(c, id, info); err != nil {
+		if errors.Is(err, domain.ErrWarehouseNotFound) {
+			newResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
+		if errors.Is(err, domain.ErrNotAllowed) {
+			newResponse(c, http.StatusForbidden, err.Error())
+			return
+		}
+
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Status(http.StatusOK)
 }

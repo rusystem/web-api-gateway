@@ -15,8 +15,8 @@ func (h *Handler) initSupplierRoutes(api *gin.RouterGroup) {
 
 		// only admin can create, update, delete supplier
 		spl.POST("/", h.adminIdentity, h.createSupplier)
-		spl.DELETE("/:id", h.adminIdentity, h.deleteSupplier)
 		spl.PUT("/:id", h.adminIdentity, h.updateSupplier)
+		spl.DELETE("/:id", h.adminIdentity, h.deleteSupplier)
 	}
 }
 
@@ -209,7 +209,7 @@ func (h *Handler) updateSupplier(c *gin.Context) {
 	}
 
 	var inp domain.UpdateSupplier
-	if err := c.BindJSON(&inp); err != nil {
+	if err := c.ShouldBindJSON(&inp); err != nil {
 		newResponse(c, http.StatusBadRequest, domain.ErrInvalidInputBody.Error())
 		return
 	}

@@ -1845,6 +1845,41 @@ paths:
       tags:
       - user
   /warehouse:
+    get:
+      consumes:
+      - application/json
+      description: Получение списка складов
+      operationId: get-warehouses
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Warehouse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/v1.response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get warehouses
+      tags:
+      - warehouse
     post:
       consumes:
       - application/json
@@ -1886,6 +1921,43 @@ paths:
       tags:
       - warehouse
   /warehouse/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление склада своей компании
+      operationId: delete-warehouse
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete warehouse
+      tags:
+      - warehouse
     get:
       consumes:
       - application/json
@@ -1923,6 +1995,49 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get warehouse by id
+      tags:
+      - warehouse
+    put:
+      consumes:
+      - application/json
+      description: Обновление склада своей компании
+      operationId: update-warehouse
+      parameters:
+      - description: Warehouse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Необходимо указать данные склада.
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.InputWarehouse'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update warehouse
       tags:
       - warehouse
 securityDefinitions:
