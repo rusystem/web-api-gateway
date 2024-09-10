@@ -52,9 +52,9 @@ func (h *Handler) Init() *gin.Engine {
 				return
 			}
 
-			if status := c.Writer.Status(); status > 300 && status < 399 {
-				c.Abort()
-			}
+			/*			if status := c.Writer.Status(); status > 300 && status < 399 {
+						c.Abort()
+					}*/ // todo вернуть после настройки ci cd
 		}
 	}()
 
