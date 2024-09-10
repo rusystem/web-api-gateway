@@ -96,13 +96,30 @@ func (h *Handler) getWarehouses(c *gin.Context) {
 // @Failure default {object} domain.ErrorResponse
 // @Router /warehouse [POST]
 func (h *Handler) createWarehouse(c *gin.Context) {
-	var inp domain.Warehouse
+	var inp domain.InputWarehouse
 	if err := c.BindJSON(&inp); err != nil {
 		newResponse(c, http.StatusBadRequest, domain.ErrInvalidInputBody.Error())
 		return
 	}
 
-	id, err := h.services.Warehouse.Create(c, inp) //todo добавить привязку склада к компании
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	id, err := h.services.Warehouse.Create(c, domain.Warehouse{
+		Name:              inp.Name,
+		Address:           inp.Address,
+		ResponsiblePerson: inp.ResponsiblePerson,
+		Phone:             inp.Phone,
+		Email:             inp.Email,
+		MaxCapacity:       inp.MaxCapacity,
+		CurrentOccupancy:  inp.CurrentOccupancy,
+		OtherFields:       inp.OtherFields,
+		Country:           inp.Country,
+		CompanyId:         info.CompanyId,
+	})
 	if err != nil {
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
