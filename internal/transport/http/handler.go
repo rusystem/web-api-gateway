@@ -10,7 +10,6 @@ import (
 	"github.com/rusystem/web-api-gateway/pkg/limiter"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/unrolled/secure"
 	"net/http"
 )
 
@@ -36,14 +35,14 @@ func (h *Handler) Init() *gin.Engine {
 	// init gin handler
 	router := gin.Default()
 
-	secureMiddleware := secure.New(secure.Options{
+	/*	secureMiddleware := secure.New(secure.Options{
 		FrameDeny:          true,
 		ContentTypeNosniff: true,
 		BrowserXssFilter:   true,
 		//ContentSecurityPolicy: "default-src 'self'",
-	})
+	})*/
 
-	secureFunc := func() gin.HandlerFunc {
+	/*	secureFunc := func() gin.HandlerFunc {
 		return func(c *gin.Context) {
 			err := secureMiddleware.Process(c.Writer, c.Request)
 
@@ -52,17 +51,17 @@ func (h *Handler) Init() *gin.Engine {
 				return
 			}
 
-			/*			if status := c.Writer.Status(); status > 300 && status < 399 {
-						c.Abort()
-					}*/ // todo вернуть после настройки ci cd
+			if status := c.Writer.Status(); status > 300 && status < 399 {
+				c.Abort()
+			}
 		}
-	}()
+	}()*/
 
 	router.Use(
 		gin.Recovery(),
 		gin.Logger(),
 		corsMiddleware,
-		secureFunc,
+		//secureFunc, // todo вернуть после настройки ci cd
 		limiter.Limit(h.cfg.Limiter.RPS, h.cfg.Limiter.Burst, h.cfg.Limiter.TTL),
 	)
 
