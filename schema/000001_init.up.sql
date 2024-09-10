@@ -65,6 +65,7 @@ CREATE TABLE "purchased_materials"
 (
     "id"                       INT PRIMARY KEY DEFAULT nextval('purchased_materials_id_seq'),
     "warehouse_id"             INT,
+    "item_id"                  INT,
     "name"                     VARCHAR(255),
     "by_invoice"               VARCHAR(255),
     "article"                  VARCHAR(255),
@@ -131,6 +132,7 @@ CREATE TABLE "purchased_materials_archive"
 (
     "id"                       INT PRIMARY KEY DEFAULT nextval('purchased_materials_archive_id_seq'),
     "warehouse_id"             INT,
+    "item_id"                  INT,
     "name"                     VARCHAR(255),
     "by_invoice"               VARCHAR(255),
     "article"                  VARCHAR(255),
@@ -247,23 +249,23 @@ CREATE TABLE "sections"
 ALTER TABLE "planning_materials"
     ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
 
+ALTER TABLE "purchased_materials"
+    ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
+
+ALTER TABLE "planning_materials_archive"
+    ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
+
+ALTER TABLE "purchased_materials_archive"
+    ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
+
 ALTER TABLE "planning_materials"
     ADD FOREIGN KEY ("supplier_id") REFERENCES "suppliers" ("id");
 
 ALTER TABLE "purchased_materials"
-    ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
-
-ALTER TABLE "purchased_materials"
     ADD FOREIGN KEY ("supplier_id") REFERENCES "suppliers" ("id");
 
 ALTER TABLE "planning_materials_archive"
-    ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
-
-ALTER TABLE "planning_materials_archive"
     ADD FOREIGN KEY ("supplier_id") REFERENCES "suppliers" ("id");
-
-ALTER TABLE "purchased_materials_archive"
-    ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
 
 ALTER TABLE "purchased_materials_archive"
     ADD FOREIGN KEY ("supplier_id") REFERENCES "suppliers" ("id");
@@ -274,6 +276,9 @@ ALTER TABLE "users"
 ALTER TABLE "warehouses"
     ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 
+ALTER TABLE "suppliers"
+    ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
+
 ALTER TABLE "planning_materials"
     ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 
@@ -283,7 +288,7 @@ ALTER TABLE "purchased_materials"
 ALTER TABLE "planning_materials_archive"
     ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 
-ALTER TABLE "suppliers"
+ALTER TABLE "purchased_materials_archive"
     ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
 
 DO
