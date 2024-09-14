@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
-	tools "github.com/rusystem/web-api-gateway/tool"
+	tools "github.com/rusystem/web-api-gateway/tools"
 	"net/http"
 	"strings"
 )

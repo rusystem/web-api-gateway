@@ -17,6 +17,7 @@ type Config struct {
 	UserClient      *grpc.UserAccountsClient
 	CompanyClient   *grpc.CompanyAccountsClient
 	SectionsClient  *grpc.SectionsAccountsClient
+	MaterialClient  *warehouse.MaterialsClient
 }
 
 type Service struct {
@@ -26,6 +27,7 @@ type Service struct {
 	User      User
 	Company   Company
 	Sections  Sections
+	Materials Materials
 }
 
 func New(cfg Config) *Service {
@@ -36,5 +38,6 @@ func New(cfg Config) *Service {
 		User:      NewUserServices(cfg.Config, cfg.UserClient),
 		Company:   NewCompanyService(cfg.Config, cfg.CompanyClient),
 		Sections:  NewSectionsService(cfg.Config, cfg.SectionsClient),
+		Materials: NewMaterialsService(cfg.Config, cfg.MaterialClient),
 	}
 }

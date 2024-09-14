@@ -31,6 +31,7 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 		// warehouse routes
 		h.initSupplierRoutes(v1)
 		h.initWarehouseRoutes(v1)
+		h.initMaterialsRoutes(v1)
 
 		// accounts routes
 		h.initCompanyRoutes(v1)
@@ -39,34 +40,34 @@ func (h *Handler) Init(api *gin.RouterGroup) {
 	}
 }
 
-func parseSkipQueryParam(c *gin.Context) (int, error) {
-	var skip int
+func parseOffsetQueryParam(c *gin.Context) (int64, error) {
+	var offset int
 	var err error
 
-	skipParam := c.Query("skip")
-	if skipParam != "" {
-		skip, err = strconv.Atoi(skipParam)
+	offsetParam := c.Query("offset")
+	if offsetParam != "" {
+		offset, err = strconv.Atoi(offsetParam)
 		if err != nil {
-			return 0, domain.ErrInvalidSkipParam
+			return 0, domain.ErrInvalidOffsetParam
 		}
 	}
 
-	return skip, nil
+	return int64(offset), nil
 }
 
-func parseTakeQueryParam(c *gin.Context) (int, error) {
-	var take = 100
+func parseLimitQueryParam(c *gin.Context) (int64, error) {
+	var limit = 100
 	var err error
 
-	takeParam := c.Query("take")
-	if takeParam != "" {
-		take, err = strconv.Atoi(takeParam)
+	limitParam := c.Query("limit")
+	if limitParam != "" {
+		limit, err = strconv.Atoi(limitParam)
 		if err != nil {
-			return 0, domain.ErrInvalidTakeParam
+			return 0, domain.ErrInvalidLimitParam
 		}
 	}
 
-	return take, nil
+	return int64(limit), nil
 }
 
 func parseIdIntPathParam(c *gin.Context) (int64, error) {

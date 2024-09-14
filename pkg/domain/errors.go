@@ -16,6 +16,7 @@ var (
 	ErrUserAvatarNotFound  = errors.New("user_not_found")
 	ErrWarehouseNotFound   = errors.New("warehouse doesn`t exists")
 	ErrSupplierNotFound    = errors.New("supplier doesn`t exists")
+	ErrMaterialNotFound    = errors.New("material doesn`t exists")
 
 	ErrUserAlreadyExists = errors.New("user with such username or email already exists")
 
@@ -25,8 +26,8 @@ var (
 	ErrGenerateAvatar   = errors.New("failed to generate avatar")
 
 	ErrInvalidInputBody     = errors.New("invalid input body")
-	ErrInvalidTakeParam     = errors.New("invalid take param")
-	ErrInvalidSkipParam     = errors.New("invalid skip param")
+	ErrInvalidLimitParam    = errors.New("invalid Limit param")
+	ErrInvalidOffsetParam   = errors.New("invalid offset param")
 	ErrInvalidIdParam       = errors.New("invalid id param")
 	ErrInvalidEmailParam    = errors.New("invalid email")
 	ErrInvalidAdminToken    = errors.New("invalid admin auth token")

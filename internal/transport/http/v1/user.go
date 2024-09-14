@@ -40,7 +40,7 @@ func (h *Handler) getUserInfo(c *gin.Context) {
 		return
 	}
 
-	userInfo, err := h.services.User.GetById(c, info.UserId)
+	userInfo, err := h.services.User.GetById(c, info.UserId, info)
 	if err != nil {
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -130,8 +130,19 @@ func (h *Handler) getUser(c *gin.Context) {
 		return
 	}
 
-	userInfo, err := h.services.User.GetById(c, id)
+	info, err := getUserInfo(c)
 	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	userInfo, err := h.services.User.GetById(c, id, info)
+	if err != nil {
+		if errors.Is(err, domain.ErrNotAllowed) {
+			newResponse(c, http.StatusForbidden, err.Error())
+			return
+		}
+
 		if errors.Is(err, domain.ErrUserNotFound) {
 			newResponse(c, http.StatusNotFound, err.Error())
 			return

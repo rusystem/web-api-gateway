@@ -12,7 +12,7 @@ import (
 	"github.com/rusystem/web-api-gateway/pkg/client/grpc/accounts"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
 	"github.com/rusystem/web-api-gateway/pkg/logger"
-	tools "github.com/rusystem/web-api-gateway/tool"
+	tools "github.com/rusystem/web-api-gateway/tools"
 	"golang.org/x/crypto/bcrypt"
 	"reflect"
 	"time"

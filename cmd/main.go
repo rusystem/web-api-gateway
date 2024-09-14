@@ -97,6 +97,16 @@ func main() {
 		}
 	}(whClient)
 
+	mtrlClient, err := warehouse.NewMaterialsClient(cfg.Url.Warehouse)
+	if err != nil {
+		logger.Fatal(fmt.Sprintf("can`t connect to chat grpc service, err - %v\n", err))
+	}
+	defer func(mtrlClient *warehouse.MaterialsClient) {
+		if err = mtrlClient.Close(); err != nil {
+			logger.Error(fmt.Sprintf("the error occurred while closing materials grpc connection, err - %v", err))
+		}
+	}(mtrlClient)
+
 	// init grpc company accounts client
 	compClient, err := grpc.NewCompanyAccountsClient(cfg.Url.Accounts)
 	if err != nil {
@@ -141,6 +151,7 @@ func main() {
 		CompanyClient:   compClient,
 		UserClient:      userClient,
 		SectionsClient:  sectionClient,
+		MaterialClient:  mtrlClient,
 	})
 	hh := http_handler.NewHandler(srv, tokenManager, cfg)
 

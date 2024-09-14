@@ -553,6 +553,1239 @@ const docTemplate = `{
                 }
             }
         },
+        "/materials/archive/planning/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение списка запланированных материалов из архива",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials archive"
+                ],
+                "summary": "Get planning archive list",
+                "operationId": "get-planning-archive-list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Material"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/archive/planning/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение запланированного материала из архива по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials archive"
+                ],
+                "summary": "Get planning archive by id",
+                "operationId": "get-planning-archive-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID архиввного планируемого материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Material"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление запланированного материала из архива по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials archive"
+                ],
+                "summary": "Delete planning archive by id",
+                "operationId": "delete-planning-archive-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID архиввного планируемого материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/archive/purchased/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение списка закупленных материалов из архива",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials archive"
+                ],
+                "summary": "Get purchased archive list",
+                "operationId": "get-purchased-archive-list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Material"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/archive/purchased/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение закупленного материала из архива по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials archive"
+                ],
+                "summary": "Get purchased archive by id",
+                "operationId": "get-purchased-archive-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID архиввного закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Material"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление закупленного материала из архива по ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials archive"
+                ],
+                "summary": "Delete purchased archive by id",
+                "operationId": "delete-purchased-archive-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID архиввного закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/planning": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Создание планируемого материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials planning"
+                ],
+                "summary": "Create planning material",
+                "operationId": "create-planning-material",
+                "parameters": [
+                    {
+                        "description": "Необходимо указать данные планируемого материала",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CreatePlanningMaterial"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.IdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/planning/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Список планируемых материалов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials planning"
+                ],
+                "summary": "Get planning list",
+                "operationId": "get-planning-list",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "limit query param",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "offset query param",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Material"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/planning/move-to-purchased/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Перемещение планируемого материала в закупленные",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials planning"
+                ],
+                "summary": "Move planning material to purchased",
+                "operationId": "move-planning-to-purchased",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID планируемого материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchasedIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/planning/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение планируемого материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials planning"
+                ],
+                "summary": "Get planning material",
+                "operationId": "get-planning-material",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID планируемого материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Material"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление планируемого материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials planning"
+                ],
+                "summary": "Update planning material",
+                "operationId": "update-planning-material",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID планируемого материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Необходимо указать данные планируемого материала",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdatePlanningMaterial"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление планируемого материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials planning"
+                ],
+                "summary": "Delete planning material",
+                "operationId": "delete-planning-material",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID планируемого материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/purchased": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Создание закупленного материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Create purchased material",
+                "operationId": "create-purchased-material",
+                "parameters": [
+                    {
+                        "description": "Необходимо указать данные закупленного материала",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.CreatePurchasedMaterial"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.PurchasedIdResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/purchased/list": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение списка закупленных материалов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Get purchased list",
+                "operationId": "get-purchased-list",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "limit query param",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "offset query param",
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Material"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/purchased/move-to-archive/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Перемещение закупленного материала в архив",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Move purchased to archive",
+                "operationId": "move-purchased-to-archive",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/purchased/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение закупленного материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Get purchased material",
+                "operationId": "get-purchased-material",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Material"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновление закупленного материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Update purchased material",
+                "operationId": "update-purchased-material",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Необходимо указать данные закупленного материала",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.UpdatePurchasedMaterial"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Удаление закупленного материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Delete purchased material",
+                "operationId": "delete-purchased-material",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/purchased/{id}/barcode": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение штрихкода закупленного материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Get purchased barcode",
+                "operationId": "get-purchased-barcode",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Штрихкод",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/materials/purchased/{id}/qr-code": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получение QR кода закупленного материала",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "image/png"
+                ],
+                "tags": [
+                    "materials purchased"
+                ],
+                "summary": "Get purchased QR code",
+                "operationId": "get-purchased-qr-code",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID закупленного материала",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "QR-код в формате PNG",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/domain.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "security": [
@@ -2026,6 +3259,267 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.CreatePlanningMaterial": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "article": {
+                    "description": "Артикул товара",
+                    "type": "string",
+                    "example": "SB-1234"
+                },
+                "by_invoice": {
+                    "description": "Накладная на товар",
+                    "type": "string",
+                    "example": "INV-987654"
+                },
+                "comments": {
+                    "description": "Комментарии",
+                    "type": "string",
+                    "example": "Urgent order"
+                },
+                "contract": {
+                    "description": "Дата договора",
+                    "type": "string",
+                    "example": "2023-08-15T10:00:00Z"
+                },
+                "expiration_date": {
+                    "description": "Срок годности товара",
+                    "type": "string",
+                    "example": "2024-08-15T10:00:00Z"
+                },
+                "file": {
+                    "description": "Файл, связанный с товаром",
+                    "type": "string",
+                    "example": "contract_1234.pdf"
+                },
+                "incoming_delivery_number": {
+                    "description": "Входящий номер поставки",
+                    "type": "string",
+                    "example": "DEL-56789"
+                },
+                "min_stock_level": {
+                    "description": "Минимальный уровень запаса",
+                    "type": "integer",
+                    "example": 10
+                },
+                "name": {
+                    "description": "Наименование товара",
+                    "type": "string",
+                    "example": "Steel Beam"
+                },
+                "other_fields": {
+                    "description": "Дополнительные пользовательские поля",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "price_without_vat": {
+                    "description": "Цена без НДС",
+                    "type": "number",
+                    "example": 150.75
+                },
+                "product_category": {
+                    "description": "Категория товара",
+                    "type": "string",
+                    "example": "Construction"
+                },
+                "received_date": {
+                    "description": "Дата поступления товара",
+                    "type": "string",
+                    "example": "2023-08-20T10:00:00Z"
+                },
+                "reserve": {
+                    "description": "Резерв товара",
+                    "type": "string",
+                    "example": "50"
+                },
+                "responsible_person": {
+                    "description": "Ответственное лицо за товар",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "status": {
+                    "description": "Статус товара",
+                    "type": "string",
+                    "example": "active"
+                },
+                "storage_cost": {
+                    "description": "Стоимость хранения товара",
+                    "type": "number",
+                    "example": 500
+                },
+                "supplier_id": {
+                    "description": "Поставщик товара",
+                    "type": "integer",
+                    "example": 1
+                },
+                "total_quantity": {
+                    "description": "Общее количество товара",
+                    "type": "integer",
+                    "example": 500
+                },
+                "total_without_vat": {
+                    "description": "Общая стоимость без НДС",
+                    "type": "number",
+                    "example": 75375
+                },
+                "unit": {
+                    "description": "Единица измерения",
+                    "type": "string",
+                    "example": "pcs"
+                },
+                "volume": {
+                    "description": "Объем товара",
+                    "type": "integer",
+                    "example": 25
+                },
+                "warehouse_id": {
+                    "description": "Id склада",
+                    "type": "integer",
+                    "example": 1
+                },
+                "warehouse_section": {
+                    "description": "Секция склада, где хранится товар",
+                    "type": "string",
+                    "example": "B-Section-2"
+                }
+            }
+        },
+        "domain.CreatePurchasedMaterial": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "article": {
+                    "description": "Артикул товара",
+                    "type": "string",
+                    "example": "SB-1234"
+                },
+                "by_invoice": {
+                    "description": "Накладная на товар",
+                    "type": "string",
+                    "example": "INV-987654"
+                },
+                "comments": {
+                    "description": "Комментарии",
+                    "type": "string",
+                    "example": "Urgent order"
+                },
+                "contract": {
+                    "description": "Дата договора",
+                    "type": "string",
+                    "example": "2023-08-15T10:00:00Z"
+                },
+                "expiration_date": {
+                    "description": "Срок годности товара",
+                    "type": "string",
+                    "example": "2024-08-15T10:00:00Z"
+                },
+                "file": {
+                    "description": "Файл, связанный с товаром",
+                    "type": "string",
+                    "example": "contract_1234.pdf"
+                },
+                "incoming_delivery_number": {
+                    "description": "Входящий номер поставки",
+                    "type": "string",
+                    "example": "DEL-56789"
+                },
+                "location": {
+                    "description": "Локация на складе",
+                    "type": "string",
+                    "example": "A1-Section-3"
+                },
+                "min_stock_level": {
+                    "description": "Минимальный уровень запаса",
+                    "type": "integer",
+                    "example": 10
+                },
+                "name": {
+                    "description": "Наименование товара",
+                    "type": "string",
+                    "example": "Steel Beam"
+                },
+                "other_fields": {
+                    "description": "Дополнительные пользовательские поля",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "price_without_vat": {
+                    "description": "Цена без НДС",
+                    "type": "number",
+                    "example": 150.75
+                },
+                "product_category": {
+                    "description": "Категория товара",
+                    "type": "string",
+                    "example": "Construction"
+                },
+                "received_date": {
+                    "description": "Дата поступления товара",
+                    "type": "string",
+                    "example": "2023-08-20T10:00:00Z"
+                },
+                "reserve": {
+                    "description": "Резерв товара",
+                    "type": "string",
+                    "example": "50"
+                },
+                "responsible_person": {
+                    "description": "Ответственное лицо за товар",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "status": {
+                    "description": "Статус товара",
+                    "type": "string",
+                    "example": "active"
+                },
+                "storage_cost": {
+                    "description": "Стоимость хранения товара",
+                    "type": "number",
+                    "example": 500
+                },
+                "supplier_id": {
+                    "description": "Поставщик товара",
+                    "type": "integer",
+                    "example": 1
+                },
+                "total_quantity": {
+                    "description": "Общее количество товара",
+                    "type": "integer",
+                    "example": 500
+                },
+                "total_without_vat": {
+                    "description": "Общая стоимость без НДС",
+                    "type": "number",
+                    "example": 75375
+                },
+                "unit": {
+                    "description": "Единица измерения",
+                    "type": "string",
+                    "example": "pcs"
+                },
+                "volume": {
+                    "description": "Объем товара",
+                    "type": "integer",
+                    "example": 25
+                },
+                "warehouse_id": {
+                    "description": "Id склада",
+                    "type": "integer",
+                    "example": 1
+                },
+                "warehouse_section": {
+                    "description": "Секция склада, где хранится товар",
+                    "type": "string",
+                    "example": "B-Section-2"
+                }
+            }
+        },
         "domain.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -2238,11 +3732,144 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.Material": {
+            "type": "object",
+            "properties": {
+                "article": {
+                    "description": "Артикул товара",
+                    "type": "string"
+                },
+                "by_invoice": {
+                    "description": "Накладная на товар",
+                    "type": "string"
+                },
+                "comments": {
+                    "description": "Комментарии",
+                    "type": "string"
+                },
+                "company_id": {
+                    "description": "Кабинет компании к кому привязан товар",
+                    "type": "integer"
+                },
+                "contract": {
+                    "description": "Дата договора",
+                    "type": "string"
+                },
+                "expiration_date": {
+                    "description": "Срок годности товара",
+                    "type": "string"
+                },
+                "file": {
+                    "description": "Файл, связанный с товаром",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Уникальный идентификатор записи",
+                    "type": "integer"
+                },
+                "incoming_delivery_number": {
+                    "description": "Входящий номер поставки",
+                    "type": "string"
+                },
+                "item_id": {
+                    "description": "Идентификатор товара",
+                    "type": "integer"
+                },
+                "last_updated": {
+                    "description": "Дата последнего обновления информации о товаре",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "Локация на складе",
+                    "type": "string"
+                },
+                "min_stock_level": {
+                    "description": "Минимальный уровень запаса",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Наименование товара",
+                    "type": "string"
+                },
+                "other_fields": {
+                    "description": "Дополнительные пользовательские поля",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "price_without_vat": {
+                    "description": "Цена без НДС",
+                    "type": "number"
+                },
+                "product_category": {
+                    "description": "Категория товара",
+                    "type": "string"
+                },
+                "received_date": {
+                    "description": "Дата поступления товара",
+                    "type": "string"
+                },
+                "reserve": {
+                    "description": "Резерв товара",
+                    "type": "string"
+                },
+                "responsible_person": {
+                    "description": "Ответственное лицо за товар",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Статус товара",
+                    "type": "string"
+                },
+                "storage_cost": {
+                    "description": "Стоимость хранения товара",
+                    "type": "number"
+                },
+                "supplier_id": {
+                    "description": "Поставщик товара",
+                    "type": "integer"
+                },
+                "total_quantity": {
+                    "description": "Общее количество товара",
+                    "type": "integer"
+                },
+                "total_without_vat": {
+                    "description": "Общая стоимость без НДС",
+                    "type": "number"
+                },
+                "unit": {
+                    "description": "Единица измерения",
+                    "type": "string"
+                },
+                "volume": {
+                    "description": "Объем товара",
+                    "type": "integer"
+                },
+                "warehouse_id": {
+                    "description": "Id склада",
+                    "type": "integer"
+                },
+                "warehouse_section": {
+                    "description": "Секция склада, где хранится товар",
+                    "type": "string"
+                }
+            }
+        },
         "domain.MessageResponse": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.PurchasedIdResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "item_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -2534,6 +4161,266 @@ const docTemplate = `{
             "properties": {
                 "refresh_token": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.UpdatePlanningMaterial": {
+            "type": "object",
+            "properties": {
+                "article": {
+                    "description": "Артикул товара",
+                    "type": "string",
+                    "example": "SB-1234"
+                },
+                "by_invoice": {
+                    "description": "Накладная на товар",
+                    "type": "string",
+                    "example": "INV-987654"
+                },
+                "comments": {
+                    "description": "Комментарии",
+                    "type": "string",
+                    "example": "Urgent order"
+                },
+                "contract": {
+                    "description": "Дата договора",
+                    "type": "string",
+                    "example": "2023-08-15T10:00:00Z"
+                },
+                "expiration_date": {
+                    "description": "Срок годности товара",
+                    "type": "string",
+                    "example": "2024-08-15T10:00:00Z"
+                },
+                "file": {
+                    "description": "Файл, связанный с товаром",
+                    "type": "string",
+                    "example": "contract_1234.pdf"
+                },
+                "incoming_delivery_number": {
+                    "description": "Входящий номер поставки",
+                    "type": "string",
+                    "example": "DEL-56789"
+                },
+                "location": {
+                    "description": "Локация на складе",
+                    "type": "string",
+                    "example": "A1-Section-3"
+                },
+                "min_stock_level": {
+                    "description": "Минимальный уровень запаса",
+                    "type": "integer",
+                    "example": 10
+                },
+                "name": {
+                    "description": "Наименование товара",
+                    "type": "string",
+                    "example": "Steel Beam"
+                },
+                "other_fields": {
+                    "description": "Дополнительные пользовательские поля",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "price_without_vat": {
+                    "description": "Цена без НДС",
+                    "type": "number",
+                    "example": 150.75
+                },
+                "product_category": {
+                    "description": "Категория товара",
+                    "type": "string",
+                    "example": "Construction"
+                },
+                "received_date": {
+                    "description": "Дата поступления товара",
+                    "type": "string",
+                    "example": "2023-08-20T10:00:00Z"
+                },
+                "reserve": {
+                    "description": "Резерв товара",
+                    "type": "string",
+                    "example": "50"
+                },
+                "responsible_person": {
+                    "description": "Ответственное лицо за товар",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "status": {
+                    "description": "Статус товара",
+                    "type": "string",
+                    "example": "active"
+                },
+                "storage_cost": {
+                    "description": "Стоимость хранения товара",
+                    "type": "number",
+                    "example": 500
+                },
+                "supplier_id": {
+                    "description": "Поставщик товара",
+                    "type": "integer",
+                    "example": 1
+                },
+                "total_quantity": {
+                    "description": "Общее количество товара",
+                    "type": "integer",
+                    "example": 500
+                },
+                "total_without_vat": {
+                    "description": "Общая стоимость без НДС",
+                    "type": "number",
+                    "example": 75375
+                },
+                "unit": {
+                    "description": "Единица измерения",
+                    "type": "string",
+                    "example": "pcs"
+                },
+                "volume": {
+                    "description": "Объем товара",
+                    "type": "integer",
+                    "example": 25
+                },
+                "warehouse_id": {
+                    "description": "Id склада",
+                    "type": "integer",
+                    "example": 1
+                },
+                "warehouse_section": {
+                    "description": "Секция склада, где хранится товар",
+                    "type": "string",
+                    "example": "B-Section-2"
+                }
+            }
+        },
+        "domain.UpdatePurchasedMaterial": {
+            "type": "object",
+            "properties": {
+                "article": {
+                    "description": "Артикул товара",
+                    "type": "string",
+                    "example": "SB-1234"
+                },
+                "by_invoice": {
+                    "description": "Накладная на товар",
+                    "type": "string",
+                    "example": "INV-987654"
+                },
+                "comments": {
+                    "description": "Комментарии",
+                    "type": "string",
+                    "example": "Urgent order"
+                },
+                "contract": {
+                    "description": "Дата договора",
+                    "type": "string",
+                    "example": "2023-08-15T10:00:00Z"
+                },
+                "expiration_date": {
+                    "description": "Срок годности товара",
+                    "type": "string",
+                    "example": "2024-08-15T10:00:00Z"
+                },
+                "file": {
+                    "description": "Файл, связанный с товаром",
+                    "type": "string",
+                    "example": "contract_1234.pdf"
+                },
+                "incoming_delivery_number": {
+                    "description": "Входящий номер поставки",
+                    "type": "string",
+                    "example": "DEL-56789"
+                },
+                "location": {
+                    "description": "Локация на складе",
+                    "type": "string",
+                    "example": "A1-Section-3"
+                },
+                "min_stock_level": {
+                    "description": "Минимальный уровень запаса",
+                    "type": "integer",
+                    "example": 10
+                },
+                "name": {
+                    "description": "Наименование товара",
+                    "type": "string",
+                    "example": "Steel Beam"
+                },
+                "other_fields": {
+                    "description": "Дополнительные пользовательские поля",
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "price_without_vat": {
+                    "description": "Цена без НДС",
+                    "type": "number",
+                    "example": 150.75
+                },
+                "product_category": {
+                    "description": "Категория товара",
+                    "type": "string",
+                    "example": "Construction"
+                },
+                "received_date": {
+                    "description": "Дата поступления товара",
+                    "type": "string",
+                    "example": "2023-08-20T10:00:00Z"
+                },
+                "reserve": {
+                    "description": "Резерв товара",
+                    "type": "string",
+                    "example": "50"
+                },
+                "responsible_person": {
+                    "description": "Ответственное лицо за товар",
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "status": {
+                    "description": "Статус товара",
+                    "type": "string",
+                    "example": "active"
+                },
+                "storage_cost": {
+                    "description": "Стоимость хранения товара",
+                    "type": "number",
+                    "example": 500
+                },
+                "supplier_id": {
+                    "description": "Поставщик товара",
+                    "type": "integer",
+                    "example": 1
+                },
+                "total_quantity": {
+                    "description": "Общее количество товара",
+                    "type": "integer",
+                    "example": 500
+                },
+                "total_without_vat": {
+                    "description": "Общая стоимость без НДС",
+                    "type": "number",
+                    "example": 75375
+                },
+                "unit": {
+                    "description": "Единица измерения",
+                    "type": "string",
+                    "example": "pcs"
+                },
+                "volume": {
+                    "description": "Объем товара",
+                    "type": "integer",
+                    "example": 25
+                },
+                "warehouse_id": {
+                    "description": "Id склада",
+                    "type": "integer",
+                    "example": 1
+                },
+                "warehouse_section": {
+                    "description": "Секция склада, где хранится товар",
+                    "type": "string",
+                    "example": "B-Section-2"
                 }
             }
         },

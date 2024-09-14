@@ -40,8 +40,19 @@ func (h *Handler) getWarehouse(c *gin.Context) {
 		return
 	}
 
-	wh, err := h.services.Warehouse.GetById(c, id)
+	info, err := getUserInfo(c)
 	if err != nil {
+		newResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	wh, err := h.services.Warehouse.GetById(c, id, info)
+	if err != nil {
+		if errors.Is(err, domain.ErrNotAllowed) {
+			newResponse(c, http.StatusForbidden, err.Error())
+			return
+		}
+
 		if errors.Is(err, domain.ErrWarehouseNotFound) {
 			newResponse(c, http.StatusNotFound, err.Error())
 			return
@@ -104,7 +115,7 @@ func (h *Handler) createWarehouse(c *gin.Context) {
 
 	info, err := getUserInfo(c)
 	if err != nil {
-		newResponse(c, http.StatusUnauthorized, err.Error())
+		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -157,13 +168,23 @@ func (h *Handler) updateWarehouse(c *gin.Context) {
 
 	info, err := getUserInfo(c)
 	if err != nil {
-		newResponse(c, http.StatusUnauthorized, err.Error())
+		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	inp.ID = id
 
 	if err := h.services.Warehouse.Update(c, inp, info); err != nil {
+		if errors.Is(err, domain.ErrWarehouseNotFound) {
+			newResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
+		if errors.Is(err, domain.ErrNotAllowed) {
+			newResponse(c, http.StatusForbidden, err.Error())
+			return
+		}
+
 		newResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}

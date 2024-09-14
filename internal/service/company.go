@@ -6,7 +6,7 @@ import (
 	"github.com/rusystem/web-api-gateway/internal/config"
 	grpc "github.com/rusystem/web-api-gateway/pkg/client/grpc/accounts"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
-	tools "github.com/rusystem/web-api-gateway/tool"
+	tools "github.com/rusystem/web-api-gateway/tools"
 	"time"
 )
 
@@ -47,6 +47,10 @@ func (c *CompanyService) Update(ctx context.Context, req domain.CompanyUpdate, i
 		}
 
 		return err
+	}
+
+	if company.ID != info.CompanyId && !tools.IsFullAccessSection(info.Sections) {
+		return domain.ErrNotAllowed
 	}
 
 	if req.NameRu != nil {

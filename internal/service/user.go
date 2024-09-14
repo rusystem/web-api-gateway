@@ -6,12 +6,12 @@ import (
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/pkg/client/grpc/accounts"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
-	tools "github.com/rusystem/web-api-gateway/tool"
+	tools "github.com/rusystem/web-api-gateway/tools"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type User interface {
-	GetById(ctx context.Context, id int64) (domain.User, error)
+	GetById(ctx context.Context, id int64, info domain.JWTInfo) (domain.User, error)
 	UpdateProfile(ctx context.Context, user domain.UserProfileUpdate, info domain.JWTInfo) error
 	Create(ctx context.Context, user domain.User) (int64, error)
 	Update(ctx context.Context, user domain.UserUpdate, info domain.JWTInfo) error
@@ -31,8 +31,17 @@ func NewUserServices(cfg *config.Config, userClient *grpc.UserAccountsClient) *U
 	}
 }
 
-func (su *UserService) GetById(ctx context.Context, id int64) (domain.User, error) {
-	return su.userClient.GetById(ctx, id)
+func (su *UserService) GetById(ctx context.Context, id int64, info domain.JWTInfo) (domain.User, error) {
+	user, err := su.userClient.GetById(ctx, id)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	if user.CompanyID != info.CompanyId && !tools.IsFullAccessSection(info.Sections) {
+		return domain.User{}, domain.ErrNotAllowed
+	}
+
+	return user, nil
 }
 
 func (su *UserService) UpdateProfile(ctx context.Context, req domain.UserProfileUpdate, info domain.JWTInfo) error {
@@ -43,6 +52,10 @@ func (su *UserService) UpdateProfile(ctx context.Context, req domain.UserProfile
 		}
 
 		return err
+	}
+
+	if user.CompanyID != info.CompanyId && !tools.IsFullAccessSection(info.Sections) {
+		return domain.ErrNotAllowed
 	}
 
 	if req.Name != nil {

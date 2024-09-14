@@ -6,7 +6,7 @@ import (
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/pkg/client/grpc/accounts"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
-	tools "github.com/rusystem/web-api-gateway/tool"
+	tools "github.com/rusystem/web-api-gateway/tools"
 )
 
 type Sections interface {

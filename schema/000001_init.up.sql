@@ -1,6 +1,7 @@
 -- Создаем последовательности
 CREATE SEQUENCE warehouses_id_seq;
 CREATE SEQUENCE planning_materials_id_seq;
+CREATE SEQUENCE item_id_seq;
 CREATE SEQUENCE purchased_materials_id_seq;
 CREATE SEQUENCE planning_materials_archive_id_seq;
 CREATE SEQUENCE purchased_materials_archive_id_seq;
@@ -65,7 +66,7 @@ CREATE TABLE "purchased_materials"
 (
     "id"                       INT PRIMARY KEY DEFAULT nextval('purchased_materials_id_seq'),
     "warehouse_id"             INT,
-    "item_id"                  INT,
+    "item_id"                  INT             DEFAULT nextval('item_id_seq'),
     "name"                     VARCHAR(255),
     "by_invoice"               VARCHAR(255),
     "article"                  VARCHAR(255),
@@ -89,7 +90,6 @@ CREATE TABLE "purchased_materials"
     "responsible_person"       VARCHAR(255),
     "storage_cost"             DECIMAL,
     "warehouse_section"        VARCHAR(255),
-    "barcode"                  VARCHAR(255),
     "incoming_delivery_number" VARCHAR(255),
     "other_fields"             JSONB,
     "company_id"               INT
@@ -156,8 +156,8 @@ CREATE TABLE "purchased_materials_archive"
     "responsible_person"       VARCHAR(255),
     "storage_cost"             DECIMAL,
     "warehouse_section"        VARCHAR(255),
-    "barcode"                  VARCHAR(255),
     "incoming_delivery_number" VARCHAR(255),
+    "other_fields"             JSONB,
     "company_id"               INT
 );
 

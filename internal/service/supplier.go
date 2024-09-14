@@ -6,11 +6,11 @@ import (
 	"github.com/rusystem/web-api-gateway/internal/config"
 	"github.com/rusystem/web-api-gateway/pkg/client/grpc/warehouse"
 	"github.com/rusystem/web-api-gateway/pkg/domain"
-	tools "github.com/rusystem/web-api-gateway/tool"
+	tools "github.com/rusystem/web-api-gateway/tools"
 )
 
 type Supplier interface {
-	GetById(ctx context.Context, id int64) (domain.Supplier, error)
+	GetById(ctx context.Context, id int64, info domain.JWTInfo) (domain.Supplier, error)
 	Create(ctx context.Context, spl domain.Supplier) (int64, error)
 	Update(ctx context.Context, inp domain.UpdateSupplier, info domain.JWTInfo) error
 	Delete(ctx context.Context, id int64, info domain.JWTInfo) error
@@ -29,8 +29,17 @@ func NewSupplierService(cfg *config.Config, supplierClient *warehouse.SuppliersC
 	}
 }
 
-func (s *SupplierService) GetById(ctx context.Context, id int64) (domain.Supplier, error) {
-	return s.supplierClient.GetById(ctx, id)
+func (s *SupplierService) GetById(ctx context.Context, id int64, info domain.JWTInfo) (domain.Supplier, error) {
+	supplier, err := s.supplierClient.GetById(ctx, id)
+	if err != nil {
+		return domain.Supplier{}, err
+	}
+
+	if supplier.CompanyId != info.CompanyId && !tools.IsFullAccessSection(info.Sections) {
+		return domain.Supplier{}, domain.ErrNotAllowed
+	}
+
+	return supplier, nil
 }
 
 func (s *SupplierService) Create(ctx context.Context, spl domain.Supplier) (int64, error) {

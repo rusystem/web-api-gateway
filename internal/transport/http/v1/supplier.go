@@ -40,7 +40,13 @@ func (h *Handler) getSupplier(c *gin.Context) {
 		return
 	}
 
-	spl, err := h.services.Supplier.GetById(c, id)
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	spl, err := h.services.Supplier.GetById(c, id, info)
 	if err != nil {
 		if errors.Is(err, domain.ErrSupplierNotFound) {
 			newResponse(c, http.StatusNotFound, err.Error())
@@ -168,8 +174,7 @@ func (h *Handler) deleteSupplier(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Supplier.Delete(c, id, info)
-	if err != nil {
+	if err = h.services.Supplier.Delete(c, id, info); err != nil {
 		if errors.Is(err, domain.ErrSupplierNotFound) {
 			newResponse(c, http.StatusNotFound, err.Error())
 			return
