@@ -50,6 +50,21 @@ func (h *Handler) initMaterialsRoutes(api *gin.RouterGroup) {
 				purchased.DELETE("/:id", h.deletePurchasedArchiveById)
 			}
 		}
+
+		search := materials.Group("/search")
+		{
+			search.GET("/", h.searchMaterial)
+		}
+
+		category := materials.Group("/category")
+		{
+			category.POST("/", h.createCategory)
+			category.GET("/:id", h.getCategoryById)
+			category.PUT("/:id", h.updateCategory)
+			category.DELETE("/:id", h.deleteCategory)
+			category.GET("/list", h.getCategoryList)
+			category.GET("/search", h.searchCategory)
+		}
 	}
 }
 
@@ -961,6 +976,8 @@ func (h *Handler) getPurchasedArchiveById(c *gin.Context) {
 // @ID get-purchased-archive-list
 // @Accept json
 // @Produce json
+// @Param limit query int false "limit query param"
+// @Param offset query int false "offset query param"
 // @Success 200 {array} domain.Material
 // @Failure 400,404 {object} domain.ErrorResponse
 // @Failure 500 {object} domain.ErrorResponse
@@ -1040,4 +1057,325 @@ func (h *Handler) deletePurchasedArchiveById(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+// @Summary Search materials
+// @Security ApiKeyAuth
+// @Tags materials
+// @Description Поиск товара по наименованию
+// @ID search-material
+// @Accept json
+// @Produce json
+// @Param limit query int false "limit query param"
+// @Param offset query int false "offset query param"
+// @Param name query string true "name query param"
+// @Success 200 {array} domain.Material
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/search [GET]
+func (h *Handler) searchMaterial(c *gin.Context) {
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	limit, err := parseLimitQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	offset, err := parseOffsetQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	query, err := parseNameQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	mtrls, err := h.services.Materials.MaterialSearch(c.Request.Context(), domain.MaterialParams{
+		Limit:     limit,
+		Offset:    offset,
+		Query:     query,
+		CompanyId: info.CompanyId,
+	})
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, mtrls)
+}
+
+// @Summary Create material category
+// @Security ApiKeyAuth
+// @Tags materials category
+// @Description Создание категории материала
+// @ID create-material-category
+// @Accept json
+// @Produce json
+// @Param input body domain.CreateMaterialCategory true "Необходимо указать данные категории материала"
+// @Success 200 {object} domain.IdResponse
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/category [POST]
+func (h *Handler) createCategory(c *gin.Context) {
+	var inp domain.MaterialCategory
+	if err := c.ShouldBindJSON(&inp); err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	id, err := h.services.Category.Create(c.Request.Context(), domain.MaterialCategory{
+		Name:        inp.Name,
+		CompanyID:   info.CompanyId,
+		Description: inp.Description,
+		Slug:        inp.Slug,
+		CreatedAt:   time.Now().UTC(),
+		UpdatedAt:   time.Now().UTC(),
+		IsActive:    true,
+		ImgURL:      inp.ImgURL,
+	})
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, domain.IdResponse{ID: id})
+}
+
+// @Summary Get material category
+// @Security ApiKeyAuth
+// @Tags materials category
+// @Description Получение категории материала
+// @ID get-material-category
+// @Accept json
+// @Produce json
+// @Param id path int true "ID категории материала"
+// @Success 200 {object} domain.MaterialCategory
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/category/{id} [GET]
+func (h *Handler) getCategoryById(c *gin.Context) {
+	id, err := parseIdIntPathParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	category, err := h.services.Category.GetById(c.Request.Context(), id, info.CompanyId)
+	if err != nil {
+		if errors.Is(err, domain.ErrMaterialCategoryNotFound) {
+			newResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, category)
+}
+
+// @Summary Update material category
+// @Security ApiKeyAuth
+// @Tags materials category
+// @Description Обновление категории материала
+// @ID update-material-category
+// @Accept json
+// @Produce json
+// @Param id path int true "ID категории материала"
+// @Param input body domain.UpdateMaterialCategory true "Необходимо указать данные категории материала"
+// @Success 200
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/category/{id} [PUT]
+func (h *Handler) updateCategory(c *gin.Context) {
+	id, err := parseIdIntPathParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	var inp domain.UpdateMaterialCategory
+	if err = c.ShouldBindJSON(&inp); err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	inp.ID = id
+	inp.CompanyID = info.CompanyId
+
+	if err = h.services.Category.Update(c.Request.Context(), inp); err != nil {
+		if errors.Is(err, domain.ErrMaterialCategoryNotFound) {
+			newResponse(c, http.StatusNotFound, err.Error())
+			return
+		}
+
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+// @Summary Delete material category
+// @Security ApiKeyAuth
+// @Tags materials category
+// @Description Удаление категории материала
+// @ID delete-material-category
+// @Accept json
+// @Produce json
+// @Param id path int true "ID категории материала"
+// @Success 200
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/category/{id} [DELETE]
+func (h *Handler) deleteCategory(c *gin.Context) {
+	id, err := parseIdIntPathParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	if err = h.services.Category.Delete(c, id, info.CompanyId); err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+// @Summary Get material category list
+// @Security ApiKeyAuth
+// @Tags materials category
+// @Description Список категорий материалов
+// @ID get-material-category-list
+// @Accept json
+// @Produce json
+// @Param limit query int false "limit query param"
+// @Param offset query int false "offset query param"
+// @Success 200 {object} []domain.MaterialCategory
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/category/list [GET]
+func (h *Handler) getCategoryList(c *gin.Context) {
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	limit, err := parseLimitQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	offset, err := parseOffsetQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	categories, err := h.services.Category.List(c.Request.Context(), domain.MaterialParams{
+		Limit:     limit,
+		Offset:    offset,
+		CompanyId: info.CompanyId,
+	})
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, categories)
+}
+
+// @Summary Search material category
+// @Security ApiKeyAuth
+// @Tags materials category
+// @Description Поиск категорий материалов
+// @ID search-material-category
+// @Accept json
+// @Produce json
+// @Param limit query int false "limit query param"
+// @Param offset query int false "offset query param"
+// @Param name query string true "offset query param"
+// @Success 200 {object} []domain.MaterialCategory
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /materials/category/search [GET]
+func (h *Handler) searchCategory(c *gin.Context) {
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	limit, err := parseLimitQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	offset, err := parseOffsetQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	name, err := parseNameQueryParam(c)
+	if err != nil {
+		newResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	categories, err := h.services.Category.Search(c.Request.Context(), domain.MaterialParams{
+		Limit:     limit,
+		Offset:    offset,
+		CompanyId: info.CompanyId,
+		Query:     name,
+	})
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, categories)
 }

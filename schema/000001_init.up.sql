@@ -10,6 +10,7 @@ CREATE SEQUENCE users_id_seq;
 CREATE SEQUENCE companies_id_seq;
 CREATE SEQUENCE refresh_tokens_id_seq;
 CREATE SEQUENCE sections_id_seq;
+CREATE SEQUENCE material_categories_id_seq;
 CREATE
 EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -246,6 +247,19 @@ CREATE TABLE "sections"
     "name" VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE "material_categories"
+(
+    "id"          INT PRIMARY KEY DEFAULT nextval('material_categories_id_seq'),
+    "name"        VARCHAR(255) NOT NULL,
+    "company_id"  INT,
+    "description" TEXT,
+    "slug"        VARCHAR(255),
+    "created_at"  TIMESTAMP       DEFAULT (CURRENT_TIMESTAMP),
+    "updated_at"  TIMESTAMP       DEFAULT (CURRENT_TIMESTAMP),
+    "is_active"   BOOLEAN         DEFAULT true,
+    "img_url"     VARCHAR(255)
+);
+
 ALTER TABLE "planning_materials"
     ADD FOREIGN KEY ("warehouse_id") REFERENCES "warehouses" ("id");
 
@@ -290,6 +304,24 @@ ALTER TABLE "planning_materials_archive"
 
 ALTER TABLE "purchased_materials_archive"
     ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
+
+ALTER TABLE "material_categories"
+    ADD FOREIGN KEY ("company_id") REFERENCES "companies" ("id");
+
+CREATE INDEX idx_suppliers_name ON "suppliers" ("name");
+
+CREATE INDEX idx_materials_categories_name_lower ON material_categories (LOWER(name));
+CREATE INDEX idx_materials_categories_company_id ON "material_categories" ("company_id");
+
+CREATE INDEX idx_planning_materials_name ON planning_materials (LOWER(name));
+CREATE INDEX idx_purchased_materials_name ON purchased_materials (LOWER(name));
+CREATE INDEX idx_planning_materials_archive_name ON planning_materials_archive (LOWER(name));
+CREATE INDEX idx_purchased_materials_archive_name ON purchased_materials_archive (LOWER(name));
+
+CREATE INDEX idx_planning_materials_company_id ON planning_materials (company_id);
+CREATE INDEX idx_purchased_materials_company_id ON purchased_materials (company_id);
+CREATE INDEX idx_planning_materials_archive_company_id ON planning_materials_archive (company_id);
+CREATE INDEX idx_purchased_materials_archive_company_id ON purchased_materials_archive (company_id);
 
 DO
 $$

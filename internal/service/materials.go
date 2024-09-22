@@ -30,6 +30,8 @@ type Materials interface {
 	GetPurchasedArchiveList(ctx context.Context, params domain.MaterialParams) ([]domain.Material, error)
 	DeletePlanningArchiveById(ctx context.Context, id int64, info domain.JWTInfo) error
 	DeletePurchasedArchiveById(ctx context.Context, id int64, info domain.JWTInfo) error
+
+	MaterialSearch(ctx context.Context, param domain.MaterialParams) ([]domain.Material, error)
 }
 
 type MaterialsService struct {
@@ -426,4 +428,8 @@ func (s *MaterialsService) DeletePurchasedArchiveById(ctx context.Context, id in
 	}
 
 	return s.materialClient.DeletePurchasedArchiveById(ctx, id)
+}
+
+func (s *MaterialsService) MaterialSearch(ctx context.Context, param domain.MaterialParams) ([]domain.Material, error) {
+	return s.materialClient.SearchMaterial(ctx, param)
 }

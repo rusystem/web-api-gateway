@@ -3,20 +3,21 @@ package domain
 import "errors"
 
 var (
-	ErrUserNotFound        = errors.New("user doesn't exists")
-	ErrCompanyNotFound     = errors.New("company doesn't exists")
-	ErrPositionNotFound    = errors.New("position doesn't exists")
-	ErrOperatorNotFound    = errors.New("operator doesn't exists")
-	ErrSectionNotFound     = errors.New("section doesn't exists")
-	ErrRestrictionNotFound = errors.New("restriction doesn't exists")
-	ErrProfileNotFound     = errors.New("profile doesn`t exists")
-	ErrRolesNotFound       = errors.New("roles doesn`t exists")
-	ErrColleaguesNotFound  = errors.New("colleagues doesn`t exists")
-	ErrAvatarNotFound      = errors.New("avatar doesn`t exists")
-	ErrUserAvatarNotFound  = errors.New("user_not_found")
-	ErrWarehouseNotFound   = errors.New("warehouse doesn`t exists")
-	ErrSupplierNotFound    = errors.New("supplier doesn`t exists")
-	ErrMaterialNotFound    = errors.New("material doesn`t exists")
+	ErrUserNotFound             = errors.New("user doesn't exists")
+	ErrCompanyNotFound          = errors.New("company doesn't exists")
+	ErrPositionNotFound         = errors.New("position doesn't exists")
+	ErrOperatorNotFound         = errors.New("operator doesn't exists")
+	ErrSectionNotFound          = errors.New("section doesn't exists")
+	ErrRestrictionNotFound      = errors.New("restriction doesn't exists")
+	ErrProfileNotFound          = errors.New("profile doesn`t exists")
+	ErrRolesNotFound            = errors.New("roles doesn`t exists")
+	ErrColleaguesNotFound       = errors.New("colleagues doesn`t exists")
+	ErrAvatarNotFound           = errors.New("avatar doesn`t exists")
+	ErrUserAvatarNotFound       = errors.New("user_not_found")
+	ErrWarehouseNotFound        = errors.New("warehouse doesn`t exists")
+	ErrSupplierNotFound         = errors.New("supplier doesn`t exists")
+	ErrMaterialNotFound         = errors.New("material doesn`t exists")
+	ErrMaterialCategoryNotFound = errors.New("material category doesn`t exists")
 
 	ErrUserAlreadyExists = errors.New("user with such username or email already exists")
 
@@ -27,6 +28,7 @@ var (
 
 	ErrInvalidInputBody     = errors.New("invalid input body")
 	ErrInvalidLimitParam    = errors.New("invalid Limit param")
+	ErrInvalidQueryParam    = errors.New("invalid query param")
 	ErrInvalidOffsetParam   = errors.New("invalid offset param")
 	ErrInvalidIdParam       = errors.New("invalid id param")
 	ErrInvalidEmailParam    = errors.New("invalid email")

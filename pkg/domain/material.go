@@ -39,6 +39,7 @@ type MaterialParams struct {
 	Limit     int64
 	Offset    int64
 	CompanyId int64
+	Query     string
 }
 
 // CreatePlanningMaterial представляет структуру создания товара

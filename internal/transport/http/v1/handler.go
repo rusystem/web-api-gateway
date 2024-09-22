@@ -84,6 +84,15 @@ func parseIdIntPathParam(c *gin.Context) (int64, error) {
 	return int64(id), nil
 }
 
+func parseNameQueryParam(c *gin.Context) (string, error) {
+	queryParam := c.Query("name")
+	if queryParam == "" {
+		return "", domain.ErrInvalidQueryParam
+	}
+
+	return queryParam, nil
+}
+
 func parseIdStringPathParam(c *gin.Context) (string, error) {
 	id := c.Param("id")
 	if id == "" {

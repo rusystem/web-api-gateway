@@ -28,6 +28,7 @@ type Service struct {
 	Company   Company
 	Sections  Sections
 	Materials Materials
+	Category  Category
 }
 
 func New(cfg Config) *Service {
@@ -39,5 +40,6 @@ func New(cfg Config) *Service {
 		Company:   NewCompanyService(cfg.Config, cfg.CompanyClient),
 		Sections:  NewSectionsService(cfg.Config, cfg.SectionsClient),
 		Materials: NewMaterialsService(cfg.Config, cfg.MaterialClient),
+		Category:  NewMaterialCategoriesService(cfg.Config, cfg.MaterialClient),
 	}
 }

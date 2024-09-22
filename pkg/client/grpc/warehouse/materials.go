@@ -691,3 +691,188 @@ func (mc *MaterialsClient) DeletePurchasedArchiveById(ctx context.Context, id in
 	_, err := mc.materialsClient.DeletePurchasedArchive(ctx, &materials.MaterialId{Id: id})
 	return err
 }
+
+func (mc *MaterialsClient) SearchMaterial(ctx context.Context, param domain.MaterialParams) ([]domain.Material, error) {
+	var mtrls []domain.Material
+
+	resp, err := mc.materialsClient.SearchMaterial(ctx, &materials.MaterialParams{
+		Limit:     param.Limit,
+		Offset:    param.Offset,
+		CompanyId: param.CompanyId,
+		Query:     param.Query,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, mtrl := range resp.Materials {
+		var otherFields map[string]interface{}
+		if err = json.Unmarshal([]byte(mtrl.OtherFields), &otherFields); err != nil {
+			return nil, err
+		}
+
+		mtrls = append(mtrls, domain.Material{
+			ID:                     mtrl.Id,
+			WarehouseID:            mtrl.WarehouseId,
+			ItemID:                 mtrl.ItemId,
+			Name:                   mtrl.Name,
+			ByInvoice:              mtrl.ByInvoice,
+			Article:                mtrl.Article,
+			ProductCategory:        mtrl.ProductCategory,
+			Unit:                   mtrl.Unit,
+			TotalQuantity:          mtrl.TotalQuantity,
+			Volume:                 mtrl.Volume,
+			PriceWithoutVAT:        mtrl.PriceWithoutVat,
+			TotalWithoutVAT:        mtrl.TotalWithoutVat,
+			SupplierID:             mtrl.SupplierId,
+			Location:               mtrl.Location,
+			Contract:               mtrl.Contract.AsTime(),
+			File:                   mtrl.File,
+			Status:                 mtrl.Status,
+			Comments:               mtrl.Comments,
+			Reserve:                mtrl.Reserve,
+			ReceivedDate:           mtrl.ReceivedDate.AsTime(),
+			LastUpdated:            mtrl.LastUpdated.AsTime(),
+			MinStockLevel:          mtrl.MinStockLevel,
+			ExpirationDate:         mtrl.ExpirationDate.AsTime(),
+			ResponsiblePerson:      mtrl.ResponsiblePerson,
+			StorageCost:            mtrl.StorageCost,
+			WarehouseSection:       mtrl.WarehouseSection,
+			IncomingDeliveryNumber: mtrl.IncomingDeliveryNumber,
+			OtherFields:            otherFields,
+			CompanyID:              mtrl.CompanyId,
+		})
+	}
+
+	return mtrls, nil
+}
+
+func (mc *MaterialsClient) CreateMaterialCategory(ctx context.Context, category domain.MaterialCategory) (int64, error) {
+	resp, err := mc.materialsClient.CreateMaterialCategory(ctx, &materials.MaterialCategory{
+		Name:        category.Name,
+		CompanyId:   category.CompanyID,
+		Description: category.Description,
+		Slug:        category.Slug,
+		CreatedAt:   timestamppb.New(category.CreatedAt),
+		UpdatedAt:   timestamppb.New(category.UpdatedAt),
+		IsActive:    category.IsActive,
+		ImgUrl:      category.ImgURL,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return resp.Id, nil
+}
+
+func (mc *MaterialsClient) GetByIdMaterialCategory(ctx context.Context, id, companyId int64) (domain.MaterialCategory, error) {
+	if id <= 0 {
+		return domain.MaterialCategory{}, errors.New("material category, grpc client - invalid id")
+	}
+
+	resp, err := mc.materialsClient.GetByIdMaterialCategory(ctx, &materials.MaterialCategoryId{Id: id, CompanyId: companyId})
+	if err != nil {
+		if err.Error() == "rpc error: code = Unknown desc = sql: no rows in result set" {
+			return domain.MaterialCategory{}, domain.ErrMaterialCategoryNotFound
+		} //todo обработать корректно такие ошибки
+
+		return domain.MaterialCategory{}, err
+	}
+
+	return domain.MaterialCategory{
+		ID:          resp.Id,
+		Name:        resp.Name,
+		CompanyID:   resp.CompanyId,
+		Description: resp.Description,
+		Slug:        resp.Slug,
+		CreatedAt:   resp.CreatedAt.AsTime(),
+		UpdatedAt:   resp.UpdatedAt.AsTime(),
+		IsActive:    resp.IsActive,
+		ImgURL:      resp.ImgUrl,
+	}, err
+}
+
+func (mc *MaterialsClient) UpdateMaterialCategory(ctx context.Context, category domain.MaterialCategory) error {
+	_, err := mc.materialsClient.UpdateMaterialCategory(ctx, &materials.MaterialCategory{
+		Id:          category.ID,
+		Name:        category.Name,
+		CompanyId:   category.CompanyID,
+		Description: category.Description,
+		Slug:        category.Slug,
+		CreatedAt:   timestamppb.New(category.CreatedAt),
+		UpdatedAt:   timestamppb.New(category.UpdatedAt),
+		IsActive:    category.IsActive,
+		ImgUrl:      category.ImgURL,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (mc *MaterialsClient) DeleteMaterialCategory(ctx context.Context, id, companyId int64) error {
+	_, err := mc.materialsClient.DeleteMaterialCategory(ctx, &materials.MaterialCategoryId{Id: id, CompanyId: companyId})
+	return err
+}
+
+func (mc *MaterialsClient) GetListMaterialCategory(ctx context.Context, param domain.MaterialParams) ([]domain.MaterialCategory, error) {
+	var categories []domain.MaterialCategory
+
+	resp, err := mc.materialsClient.GetListMaterialCategory(ctx, &materials.MaterialParams{
+		Limit:     param.Limit,
+		Offset:    param.Offset,
+		CompanyId: param.CompanyId,
+		Query:     param.Query,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, c := range resp.MaterialCategories {
+		categories = append(categories, domain.MaterialCategory{
+			ID:          c.Id,
+			Name:        c.Name,
+			CompanyID:   c.CompanyId,
+			Description: c.Description,
+			Slug:        c.Slug,
+			CreatedAt:   c.CreatedAt.AsTime(),
+			UpdatedAt:   c.UpdatedAt.AsTime(),
+			IsActive:    c.IsActive,
+			ImgURL:      c.ImgUrl,
+		})
+	}
+
+	return categories, nil
+}
+
+func (mc *MaterialsClient) SearchMaterialCategory(ctx context.Context, param domain.MaterialParams) ([]domain.MaterialCategory, error) {
+	var categories []domain.MaterialCategory
+
+	resp, err := mc.materialsClient.SearchMaterialCategory(ctx, &materials.MaterialParams{
+		Limit:     param.Limit,
+		Offset:    param.Offset,
+		CompanyId: param.CompanyId,
+		Query:     param.Query,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, c := range resp.MaterialCategories {
+		categories = append(categories, domain.MaterialCategory{
+			ID:          c.Id,
+			Name:        c.Name,
+			CompanyID:   c.CompanyId,
+			Description: c.Description,
+			Slug:        c.Slug,
+			CreatedAt:   c.CreatedAt.AsTime(),
+			UpdatedAt:   c.UpdatedAt.AsTime(),
+			IsActive:    c.IsActive,
+			ImgURL:      c.ImgUrl,
+		})
+	}
+
+	return categories, nil
+}

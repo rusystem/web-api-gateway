@@ -90,6 +90,21 @@ definitions:
     - name_ru
     - phone
     type: object
+  domain.CreateMaterialCategory:
+    properties:
+      description:
+        example: Категория для стальных труб различного диаметра
+        type: string
+      img_url:
+        example: https://example.com/images/stalnye-truby.jpg
+        type: string
+      name:
+        example: Стальные трубы
+        type: string
+      slug:
+        example: stalnye-truby
+        type: string
+    type: object
   domain.CreatePlanningMaterial:
     properties:
       article:
@@ -556,6 +571,38 @@ definitions:
         description: Секция склада, где хранится товар
         type: string
     type: object
+  domain.MaterialCategory:
+    properties:
+      company_id:
+        example: 123
+        type: integer
+      created_at:
+        example: "2023-10-01T12:00:00Z"
+        type: string
+      description:
+        example: Категория для стальных труб различного диаметра
+        type: string
+      id:
+        example: 1
+        type: integer
+      img_url:
+        example: https://example.com/images/stalnye-truby.jpg
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: Стальные трубы
+        type: string
+      slug:
+        example: stalnye-truby
+        type: string
+      updated_at:
+        example: "2023-10-02T15:30:00Z"
+        type: string
+    required:
+    - name
+    type: object
   domain.MessageResponse:
     properties:
       message:
@@ -780,6 +827,24 @@ definitions:
         type: string
     required:
     - refresh_token
+    type: object
+  domain.UpdateMaterialCategory:
+    properties:
+      description:
+        example: Категория для стальных труб различного диаметра
+        type: string
+      img_url:
+        example: https://example.com/images/stalnye-truby.jpg
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: Стальные трубы
+        type: string
+      slug:
+        example: stalnye-truby
+        type: string
     type: object
   domain.UpdatePlanningMaterial:
     properties:
@@ -1860,6 +1925,15 @@ paths:
       - application/json
       description: Получение списка закупленных материалов из архива
       operationId: get-purchased-archive-list
+      parameters:
+      - description: limit query param
+        in: query
+        name: limit
+        type: integer
+      - description: offset query param
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:
@@ -1890,6 +1964,262 @@ paths:
       summary: Get purchased archive list
       tags:
       - materials archive
+  /materials/category:
+    post:
+      consumes:
+      - application/json
+      description: Создание категории материала
+      operationId: create-material-category
+      parameters:
+      - description: Необходимо указать данные категории материала
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateMaterialCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.IdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create material category
+      tags:
+      - materials category
+  /materials/category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаление категории материала
+      operationId: delete-material-category
+      parameters:
+      - description: ID категории материала
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete material category
+      tags:
+      - materials category
+    get:
+      consumes:
+      - application/json
+      description: Получение категории материала
+      operationId: get-material-category
+      parameters:
+      - description: ID категории материала
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.MaterialCategory'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get material category
+      tags:
+      - materials category
+    put:
+      consumes:
+      - application/json
+      description: Обновление категории материала
+      operationId: update-material-category
+      parameters:
+      - description: ID категории материала
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Необходимо указать данные категории материала
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateMaterialCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update material category
+      tags:
+      - materials category
+  /materials/category/list:
+    get:
+      consumes:
+      - application/json
+      description: Список категорий материалов
+      operationId: get-material-category-list
+      parameters:
+      - description: limit query param
+        in: query
+        name: limit
+        type: integer
+      - description: offset query param
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.MaterialCategory'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get material category list
+      tags:
+      - materials category
+  /materials/category/search:
+    get:
+      consumes:
+      - application/json
+      description: Поиск категорий материалов
+      operationId: search-material-category
+      parameters:
+      - description: limit query param
+        in: query
+        name: limit
+        type: integer
+      - description: offset query param
+        in: query
+        name: offset
+        type: integer
+      - description: offset query param
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.MaterialCategory'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Search material category
+      tags:
+      - materials category
   /materials/planning:
     post:
       consumes:
@@ -2460,6 +2790,56 @@ paths:
       summary: Move purchased to archive
       tags:
       - materials purchased
+  /materials/search:
+    get:
+      consumes:
+      - application/json
+      description: Поиск товара по наименованию
+      operationId: search-material
+      parameters:
+      - description: limit query param
+        in: query
+        name: limit
+        type: integer
+      - description: offset query param
+        in: query
+        name: offset
+        type: integer
+      - description: name query param
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Material'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Search materials
+      tags:
+      - materials
   /register:
     post:
       consumes:
