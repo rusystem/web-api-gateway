@@ -43,7 +43,7 @@ func (s *SectionsService) Update(ctx context.Context, section domain.Section) er
 		return err
 	}
 
-	if oldSection.Name == domain.FullAllAccessSection {
+	if oldSection.Name == domain.SectionFullAllAccess {
 		return domain.ErrNotAllowed
 	}
 
@@ -60,7 +60,7 @@ func (s *SectionsService) Delete(ctx context.Context, id int64) error {
 		return err
 	}
 
-	if section.Name == domain.FullAllAccessSection {
+	if section.Name == domain.SectionFullAllAccess {
 		return domain.ErrNotAllowed
 	}
 
@@ -74,7 +74,7 @@ func (s *SectionsService) List(ctx context.Context, info domain.JWTInfo) ([]doma
 	}
 
 	if !tools.IsFullAccessSection(info.Sections) {
-		tools.RemoveFullAccessSection(sections, domain.FullAllAccessSection)
+		tools.RemoveFullAccessSection(sections, domain.SectionFullAllAccess)
 	}
 
 	return s.sectionsClient.GetList(ctx)
