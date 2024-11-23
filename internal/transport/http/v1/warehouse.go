@@ -17,6 +17,7 @@ func (h *Handler) initWarehouseRoutes(api *gin.RouterGroup) {
 		wh.POST("/", h.adminIdentity, h.createWarehouse)
 		wh.PUT("/:id", h.adminIdentity, h.updateWarehouse)
 		wh.DELETE("/:id", h.adminIdentity, h.deleteWarehouse)
+		wh.GET("/responsible-person", h.adminIdentity, h.getResponsiblePerson)
 	}
 }
 
@@ -234,4 +235,32 @@ func (h *Handler) deleteWarehouse(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+// @Summary Get responsible users
+// @Security ApiKeyAuth
+// @Tags warehouse
+// @Description Получение списка доступных ответственных лиц для склада
+// @ID get-responsible-person
+// @Accept json
+// @Produce json
+// @Success 200 {array} domain.UserResponse
+// @Failure 400,404 {object} domain.ErrorResponse
+// @Failure 500 {object} domain.ErrorResponse
+// @Failure default {object} domain.ErrorResponse
+// @Router /warehouse/responsible-person [GET]
+func (h *Handler) getResponsiblePerson(c *gin.Context) {
+	info, err := getUserInfo(c)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	users, err := h.services.Warehouse.GetResponsibleUsers(c, info.CompanyId)
+	if err != nil {
+		newResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
 }

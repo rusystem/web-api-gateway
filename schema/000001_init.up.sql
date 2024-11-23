@@ -383,3 +383,13 @@ VALUES (company_id,
         ]'::jsonb,
         'admin');
 END $$;
+
+INSERT INTO "sections" ("name")
+VALUES
+    ('full_all_access'),
+    ('full_company_access'),
+    ('full_access'),
+    ('order_card_access'),
+    ('production_data_access'),
+    ('status_and_calculate_access'),
+    ('purchase_planning_access');

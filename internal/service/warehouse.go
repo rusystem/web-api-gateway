@@ -15,6 +15,7 @@ type Warehouse interface {
 	Update(ctx context.Context, wh domain.WarehouseUpdate, info domain.JWTInfo) error
 	Delete(ctx context.Context, id int64, info domain.JWTInfo) error
 	GetListByCompanyId(ctx context.Context, companyId int64) ([]domain.Warehouse, error)
+	GetResponsibleUsers(ctx context.Context, companyId int64) ([]domain.User, error)
 }
 
 type WarehouseServices struct {
@@ -114,4 +115,8 @@ func (s *WarehouseServices) Delete(ctx context.Context, id int64, info domain.JW
 
 func (s *WarehouseServices) GetListByCompanyId(ctx context.Context, companyId int64) ([]domain.Warehouse, error) {
 	return s.wc.GetList(ctx, companyId)
+}
+
+func (s *WarehouseServices) GetResponsibleUsers(ctx context.Context, companyId int64) ([]domain.User, error) {
+	return s.wc.GetResponsiblePerson(ctx, companyId)
 }
