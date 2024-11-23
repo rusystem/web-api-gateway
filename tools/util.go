@@ -118,7 +118,7 @@ func EncodeBase64(input string) string {
 // IsFullAccessSection returns true if section is full access
 func IsFullAccessSection(sections []string) bool {
 	for _, section := range sections {
-		if section == domain.FullAllAccessSection {
+		if section == domain.SectionFullAllAccess {
 			return true
 		}
 	}
