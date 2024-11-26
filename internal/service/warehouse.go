@@ -15,7 +15,7 @@ type Warehouse interface {
 	Update(ctx context.Context, wh domain.WarehouseUpdate, info domain.JWTInfo) error
 	Delete(ctx context.Context, id int64, info domain.JWTInfo) error
 	GetListByCompanyId(ctx context.Context, companyId int64) ([]domain.Warehouse, error)
-	GetResponsibleUsers(ctx context.Context, companyId int64) ([]domain.User, error)
+	GetResponsibleUsers(ctx context.Context, companyId int64) ([]domain.UserResponse, error)
 }
 
 type WarehouseServices struct {
@@ -117,6 +117,35 @@ func (s *WarehouseServices) GetListByCompanyId(ctx context.Context, companyId in
 	return s.wc.GetList(ctx, companyId)
 }
 
-func (s *WarehouseServices) GetResponsibleUsers(ctx context.Context, companyId int64) ([]domain.User, error) {
-	return s.wc.GetResponsiblePerson(ctx, companyId)
+func (s *WarehouseServices) GetResponsibleUsers(ctx context.Context, companyId int64) ([]domain.UserResponse, error) {
+	var resp []domain.UserResponse
+
+	users, err := s.wc.GetResponsiblePerson(ctx, companyId)
+	if err != nil {
+		return resp, err
+	}
+
+	for _, v := range users {
+		resp = append(resp, domain.UserResponse{
+			ID:                       v.ID,
+			CompanyID:                v.CompanyID,
+			Username:                 v.Username,
+			Name:                     v.Name,
+			Email:                    v.Email,
+			Phone:                    v.Phone,
+			CreatedAt:                v.CreatedAt,
+			UpdatedAt:                v.UpdatedAt,
+			LastLogin:                v.LastLogin.Time,
+			IsActive:                 v.IsActive,
+			Role:                     v.Role,
+			Language:                 v.Language,
+			Country:                  v.Country,
+			IsApproved:               v.IsApproved,
+			IsSendSystemNotification: v.IsSendSystemNotification,
+			Sections:                 v.Sections,
+			Position:                 v.Position,
+		})
+	}
+
+	return resp, nil
 }
