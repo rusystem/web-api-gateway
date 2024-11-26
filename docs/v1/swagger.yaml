@@ -705,7 +705,7 @@ definitions:
       sections:
         example:
         - full_company_access
-        - ' full_access'
+        - full_access
         items:
           type: string
         type: array

@@ -4613,7 +4613,7 @@ const docTemplate = `{
                     },
                     "example": [
                         "full_company_access",
-                        " full_access"
+                        "full_access"
                     ]
                 },
                 "username": {

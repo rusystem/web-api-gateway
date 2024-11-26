@@ -23,7 +23,7 @@ type SignUp struct {
 	IsActive                 bool     `json:"is_active" example:"true"`
 	IsApproved               bool     `json:"is_approved" example:"true"`
 	IsSendSystemNotification bool     `json:"is_send_system_notification" example:"false"`
-	Sections                 []string `json:"sections" example:"full_company_access, full_access"`
+	Sections                 []string `json:"sections" example:"full_company_access,full_access"`
 	Position                 string   `json:"position" example:"test"`
 }
 
