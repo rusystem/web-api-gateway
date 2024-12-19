@@ -10,5 +10,5 @@ ctx:
   ttl: 10s
 
 auth:
-  accessTokenTTL: 2h
+  accessTokenTTL: 360h
   refreshTokenTTL: 720h #30 days
