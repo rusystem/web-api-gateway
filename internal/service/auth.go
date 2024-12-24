@@ -307,7 +307,7 @@ func (as *AuthServices) isValidRefreshToken(c *gin.Context, refreshToken, ip str
 			UserAgent: tools.GetUserAgent(c),
 			Ip:        ip,
 		})
-	}*/ // todo добавить впоследствии уведомления в телеграм
+	}*/// todo добавить впоследствии уведомления в телеграм
 
 	return valid, session, nil
 }
@@ -318,23 +318,24 @@ func (as *AuthServices) validateAccessToken(ctx context.Context, token, userAgen
 		return domain.JWTInfo{}, false, err
 	}
 
-	fingerprint, err := tools.GetHashedFingerprint(ip, userAgent)
-	if err != nil {
-		return domain.JWTInfo{}, false, err
-	}
+	/*
+		fingerprint, err := tools.GetHashedFingerprint(ip, userAgent)
+		if err != nil {
+			return domain.JWTInfo{}, false, err
+		}
 
-	if info.Fingerprint != fingerprint {
-		/*		as.SuspiciousActivityLog(ctx, info.UserId, info.CompanyId, telegram.Message{
-				Header: fmt.Sprintf("У пользователя с id - %s, company id - %s не совпадает fingerprint",
-					info.UserId, info.CompanyId),
-				Datetime:  time.Now().UTC().String(),
-				Payload:   fmt.Sprintf("token - %s", token),
-				UserAgent: userAgent,
-				Ip:        ip,
-			})*/ // todo добавить по необходимости уведомления в телеграм
+		if info.Fingerprint != fingerprint {
+			/*		as.SuspiciousActivityLog(ctx, info.UserId, info.CompanyId, telegram.Message{
+					Header: fmt.Sprintf("У пользователя с id - %s, company id - %s не совпадает fingerprint",
+						info.UserId, info.CompanyId),
+					Datetime:  time.Now().UTC().String(),
+					Payload:   fmt.Sprintf("token - %s", token),
+					UserAgent: userAgent,
+					Ip:        ip,
+				}) // todo добавить по необходимости уведомления в телеграм
 
-		return domain.JWTInfo{}, false, domain.ErrInvalidAccessToken
-	}
+			return domain.JWTInfo{}, false, domain.ErrInvalidAccessToken
+		}*///todo вернуть в прод после тестирования
 
 	return info, true, nil
 }
